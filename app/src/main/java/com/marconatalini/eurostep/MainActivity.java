@@ -7,11 +7,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.*;
-import android.support.design.widget.FloatingActionButton;
 
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,14 +28,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.util.Hashtable;
-import java.util.Map;
-
 public class MainActivity extends AppCompatActivity{
 
     private int SERVER_PORT = 0;
     private String SERVER_IP = "";
-    public static String WEBSERVER_IP = "";
+    public static String WEBSERVER_IP = "", FOTO_UPLOAD_URI = "";
     public static String OPERATORE = "", NOME_OPERATORE = "";
     Button[] buttonlist;
     FloatingActionButton btn_login;
@@ -48,8 +44,9 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.29.5");
-        WEBSERVER_IP = sharedPref.getString(SettingsActivity.WEBSERVER_IP, "192.168.29.100");
+        SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.1.104");
+        WEBSERVER_IP = sharedPref.getString(SettingsActivity.WEBSERVER_IP, "192.168.1.104");
+        FOTO_UPLOAD_URI = sharedPref.getString(SettingsActivity.FOTO_UPLOAD_URI, "http://192.168.1.104/nc/foto/upload");
         SERVER_PORT = Integer.valueOf(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
         OPERATORE = sharedPref.getString(SettingsActivity.OPERATORE, "");
         //USEVOLLEY = sharedPref.getBoolean(SettingsActivity.USEVOLLEY, false);
@@ -221,8 +218,10 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void loginOperatore(final String cartellino){
-        String LOGINAPP_URL ="http://"+ WEBSERVER_IP +"/loginapp.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGINAPP_URL,
+//        String LOGINAPP_URL ="http://"+ WEBSERVER_IP +"/loginapp.php";
+        String LOGINAPP_URL ="http://"+ WEBSERVER_IP +"/login/"+cartellino+"?appversion="+ BuildConfig.VERSION_CODE;
+        Toast.makeText(MainActivity.this, LOGINAPP_URL , Toast.LENGTH_LONG).show();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGINAPP_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -257,7 +256,7 @@ public class MainActivity extends AppCompatActivity{
                         Toast.makeText(MainActivity.this, "Errore server: riprova..", Toast.LENGTH_LONG).show(); //volleyError.getMessage().toString()
                     }
                 }){
-            @Override
+            /*@Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 //Creating parameters
                 Map<String,String> params = new Hashtable<String, String>();
@@ -268,12 +267,10 @@ public class MainActivity extends AppCompatActivity{
 
                 //returning parameters
                 return params;
-            }
+            }*/
         };
 
         MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
     }
-
-
 
 }

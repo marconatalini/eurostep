@@ -1,17 +1,16 @@
 package com.marconatalini.eurostep;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,8 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Map;
 
 public class Lista_ordini_la extends AppCompatActivity {
 
@@ -32,7 +29,7 @@ public class Lista_ordini_la extends AppCompatActivity {
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<JSONObject> arrayList = new ArrayList<>();
-    String json_url, phpquery;
+    String json_url; //, phpquery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +51,7 @@ public class Lista_ordini_la extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            phpquery = extras.getString("phpquery");
+//            phpquery = extras.getString("phpquery");
             json_url = extras.getString("json_url");
             titolo.setText(extras.getString("titolo_lista"));
         }
@@ -89,7 +86,7 @@ public class Lista_ordini_la extends AppCompatActivity {
 
     private ArrayList<JSONObject> getListaOrdiniLA() {
         final ArrayList<JSONObject> jsonObjectsList = new ArrayList<>();
-        StringRequest jsonArrayRequest = new StringRequest(Request.Method.POST, json_url,
+        StringRequest jsonArrayRequest = new StringRequest(Request.Method.GET, json_url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -106,9 +103,9 @@ public class Lista_ordini_la extends AppCompatActivity {
 
                             try {
                                 JSONObject jsonObject = jsonArray.getJSONObject(count);
-                                c += jsonObject.getInt("n_cornici");
-                                s += jsonObject.getInt("n_complementari");
-                                t += jsonObject.getInt("n_tagli");
+                                c += jsonObject.getInt("nCornici");
+                                s += jsonObject.getInt("nComplementari");
+                                t += jsonObject.getInt("nTagli");
                                 jsonObjectsList.add(jsonObject);
                                 count++;
                             } catch (JSONException e) {
@@ -126,7 +123,7 @@ public class Lista_ordini_la extends AppCompatActivity {
                 error.printStackTrace();
             }
         }) {
-            @Override
+            /*@Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -137,7 +134,7 @@ public class Lista_ordini_la extends AppCompatActivity {
 
                 //returning parameters
                 return params;
-            }
+            }*/
         };
 
         MySingleton.getInstance(Lista_ordini_la.this).addToRequestque(jsonArrayRequest);

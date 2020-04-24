@@ -29,7 +29,7 @@
         android:id="@+id/btn_NCI_generica"
         android:text="allega foto NC"/>
 
-    <android.support.v4.widget.Space
+    <androidx.legacy.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>

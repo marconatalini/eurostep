@@ -1,7 +1,6 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.localdb;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -24,18 +23,19 @@ public class db_eurostep {
 
     /* Inner class that defines the table contents */
     public static abstract class registro implements BaseColumns {
-        public static final String TABLE_NAME = "registro";
-        public static final String COLUMN_NAME_REGISTRAZIONE_ID = "_id";
-        public static final String COLUMN_NAME_DATI = "dati";
-        public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+    public static final String TABLE_NAME = "registro";
+    public static final String COLUMN_NAME_REGISTRAZIONE_ID = "_id";
+    public static final String COLUMN_NAME_DATI = "dati";
+    public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
     }
 
     private static final String SQL_CREATE_REGISTRO =
             "CREATE TABLE " + registro.TABLE_NAME + " (" +
                     registro.COLUMN_NAME_REGISTRAZIONE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                     registro.COLUMN_NAME_DATI + TEXT_TYPE + COMMA_SEP +
-                    //registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT CURRENT_TIMESTAMP NOT NULL" +
-                    registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))" +
+//                    registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT CURRENT_TIMESTAMP NOT NULL" +
+//                    registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))" +
+                    registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT (DATETIME(CURRENT_TIMESTAMP))" +
                     " )";
 
     private static final String SQL_DELETE_REGISTRO =
@@ -68,6 +68,5 @@ public class db_eurostep {
             onUpgrade(db, oldVersion, newVersion);
         }
     }
-
 }
 

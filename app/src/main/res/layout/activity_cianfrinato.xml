@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@color/blu_logo"
             android:text="Lista merce in arrivo"
-            android:textColor="@color/common_google_signin_btn_text_dark_default" />
+            android:textColor="@color/design_default_color_primary_dark" />
 
     </LinearLayout>
 

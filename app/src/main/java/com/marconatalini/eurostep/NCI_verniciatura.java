@@ -32,6 +32,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.marconatalini.eurostep.tool.Barcoder;
 
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -63,8 +64,9 @@ public class NCI_verniciatura extends Activity {
     final static int GET_VER2 = 6;
     final static int GET_VER3 = 7;
 
-    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCV.php";
-    private String COLORE_URL = "http://" + MainActivity.WEBSERVER_IP + "/getColoreAS.php";
+//    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCV.php";
+//    private String COLORE_URL = "http://" + MainActivity.WEBSERVER_IP + "/getColoreAS.php";
+
 
     Boolean DatiOK = false;
 
@@ -73,7 +75,7 @@ public class NCI_verniciatura extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nci_verniciatura);
         final Intent scan = new IntentIntegrator(NCI_verniciatura.this).createScanIntent();
-        final SocketTask socketTask = new SocketTask(NCI_verniciatura.this);
+//        final SocketTask socketTask = new SocketTask(NCI_verniciatura.this);
 
         difetto_telai = (CheckBox) findViewById(R.id.check_telai);
         difetto_complementari = (CheckBox) findViewById(R.id.check_complementari);
@@ -112,6 +114,7 @@ public class NCI_verniciatura extends Activity {
         nciv_note = (TextView) findViewById(R.id.nciv_note);
         soluzione = (TextView) findViewById(R.id.nciv_soluzione);
         numero_lotto = (EditText) findViewById(R.id.numero_lotto);
+
         TextWatcher numeroWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -125,13 +128,15 @@ public class NCI_verniciatura extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 8 && (socketTask.checkBarcodeOrdine(s.toString()))) {
+                String ordine_lotto = s.toString();
+                Barcoder bc = new Barcoder(ordine_lotto);
+                if (bc.checkBarcodeOrdine()) {
                     //Toast.makeText(NCI_generica.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
-                    getDescrizioneColore();
+                    getDescrizioneColore(bc.getNumeroOrdine(), bc.getLottoOrdine());
                     DatiOK = true;
                 }
 
-                if (s.length() == 6 && (socketTask.checkNumeroOrdineBarre(s.toString()))){
+                if (bc.isOrdineBarre()){
                     DatiOK = true;
                 }
 
@@ -174,7 +179,7 @@ public class NCI_verniciatura extends Activity {
             }
         });
 
-        btn_agg2 = (Button) findViewById(R.id.btn_agganciatore2);
+        btn_agg2 = findViewById(R.id.btn_agganciatore2);
         btn_agg2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +187,7 @@ public class NCI_verniciatura extends Activity {
             }
         });
 
-        btn_agg3 = (Button) findViewById(R.id.btn_agganciatore3);
+        btn_agg3 = findViewById(R.id.btn_agganciatore3);
         btn_agg3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,21 +195,21 @@ public class NCI_verniciatura extends Activity {
             }
         });
 
-        btn_ver1 = (Button) findViewById(R.id.btn_verniciatore1);
+        btn_ver1 = findViewById(R.id.btn_verniciatore1);
         btn_ver1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(scan, GET_VER1);
             }
         });
-        btn_ver2 = (Button) findViewById(R.id.btn_verniciatore2);
+        btn_ver2 = findViewById(R.id.btn_verniciatore2);
         btn_ver2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(scan, GET_VER2);
             }
         });
-        btn_ver3 = (Button) findViewById(R.id.btn_verniciatore3);
+        btn_ver3 = findViewById(R.id.btn_verniciatore3);
         btn_ver3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,26 +348,20 @@ public class NCI_verniciatura extends Activity {
     private void sendNCIV() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(this, "Invio dati", "Attendi...", false, false);
+        String UPLOAD_URL = String.format("http://%s/nc/verniciatura", MainActivity.WEBSERVER_IP);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //Disimissing the progress dialog
-                        loading.dismiss();
-                        //Showing toast message of the response
-                        Toast.makeText(NCI_verniciatura.this, s, Toast.LENGTH_LONG).show();
-                        Log.d("volleyerror", s);
-                        finish();
-                    }
+                response -> {
+                    //Disimissing the progress dialog
+                    loading.dismiss();
+                    //Showing toast message of the response
+                    Toast.makeText(NCI_verniciatura.this, response, Toast.LENGTH_LONG).show();
+                    finish();
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Dismissing the progress dialog
-                        loading.dismiss();
-                        //Showing toast
-                        Toast.makeText(NCI_verniciatura.this, volleyError.toString(), Toast.LENGTH_LONG).show();
-                    }
+                error -> {
+                    //Dismissing the progress dialog
+                    loading.dismiss();
+                    //Showing toast
+                    Toast.makeText(NCI_verniciatura.this, error.toString(), Toast.LENGTH_LONG).show();
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -462,6 +461,8 @@ public class NCI_verniciatura extends Activity {
                 params.put("data_soluzione", mdata_soluzione);
                 params.put("chiusa", mchiusa);
 
+                params.put("XDEBUG_SESSION_START", "session_name");
+
                 //returning parameters
                 return params;
             }
@@ -480,28 +481,25 @@ public class NCI_verniciatura extends Activity {
         MySingleton.getInstance(NCI_verniciatura.this).addToRequestque(stringRequest);
     }
 
-    private void getDescrizioneColore() {
+    private void getDescrizioneColore(Integer numeroOrdine, String ordine_lotto) {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, COLORE_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //Showing toast message of the response
-                        if (s.contains(";")){
-                            String [] data = s.split(";");
-                            xcdcol.setText(data[0]);
-                            xdecol.setText(data[1]);
-                        } else {
-                            xdecol.setText("Colore non trovato.");
-                        }
+//        String COLORE_URL = "http://" + MainActivity.WEBSERVER_IP + "/colore";
+        String COLORE_URL = String.format("http://%s/nc/colore/%d/%s", MainActivity.WEBSERVER_IP, numeroOrdine, ordine_lotto);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, COLORE_URL,
+                response -> {
+                    //Showing toast message of the response
+                    if (response.contains(";")){
+                        String [] data = response.split(";");
+                        xcdcol.setText(data[0]);
+                        xdecol.setText(data[1]);
+                    } else {
+                        Toast.makeText(NCI_verniciatura.this, response, Toast.LENGTH_LONG).show();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(NCI_verniciatura.this, "Codice NON trovato. Tel 156.", Toast.LENGTH_LONG).show();
-                    }
+                volleyError -> {
+                    //Showing toast
+                    Toast.makeText(NCI_verniciatura.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {

@@ -29,23 +29,28 @@ public class ListeActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         Intent lista = new Intent(ListeActivity.this, Lista_ordini_la.class);
-        lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/lista_ordiniLA.php");
+//        lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/lista_ordiniLA.php");
+
 
         if (v == dati_inviati) {
+            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/registrazioni/"+MainActivity.OPERATORE);
             lista.putExtra("titolo_lista", "Registro fine lavoro");
-            lista.putExtra("phpquery", "DatiInviati");
+//            lista.putExtra("phpquery", "DatiInviati");
         }
         if (v == cianfrinatura) {
+            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniCianfrinatura");
             lista.putExtra("titolo_lista", "Ordini da cianfrinare");
-            lista.putExtra("phpquery", "ArrivoInCianfrinatura");
+//            lista.putExtra("phpquery", "ArrivoInCianfrinatura");
         }
         if (v == verniciatura) {
+            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniVerniciatura");
             lista.putExtra("titolo_lista", "Ordini già levigati");
-            lista.putExtra("phpquery", "ArrivoInVerniciatura");
+//            lista.putExtra("phpquery", "ArrivoInVerniciatura");
         }
         if (v == cnc) {
+            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniCNC");
             lista.putExtra("titolo_lista", "Ordini con lavorazioni");
-            lista.putExtra("phpquery", "OrdiniCNC");
+//            lista.putExtra("phpquery", "OrdiniCNC");
         }
 
         startActivity(lista);

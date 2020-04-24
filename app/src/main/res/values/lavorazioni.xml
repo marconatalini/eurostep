@@ -7,6 +7,7 @@
         tipo 2 = selezione ordini multipli (cianfrinato)
         tipo I = inizio lavorazione non temporizzata
         tipo F = fine lavorazione non temporizzata
+        tipo M = scarico dati dalla memoria
         -->
         <item>Taglio materiale (A1 1)</item>
         <item>Lamiere (A2 1)</item>
@@ -25,5 +26,6 @@
         <item>Montaggio guarnizioni (G1 1)</item>
         <item>Imballaggio (I1 1)</item>
         <item>Pulizia reparto (P1 0)</item>
+        <item>Invio dati memoria (MM M)</item>
     </string-array>
 </resources>

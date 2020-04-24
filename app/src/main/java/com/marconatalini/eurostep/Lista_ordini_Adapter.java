@@ -4,17 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.marconatalini.eurostep.tool.DateFromJsonTimestampString;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Marco on 22/11/2016.
@@ -46,16 +51,21 @@ public class Lista_ordini_Adapter extends RecyclerView.Adapter<Lista_ordini_Adap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        String numero = "", lotto = "", colore = "", dataora="";
-        int fine = 0, cornici=0, pezzi=0;
+        String dataora="", numero = "", lotto = "", colore = "";
+        int cornici=0, pezzi=0;
+//        boolean fine=false;
         try {
-            numero = jsonObjectArrayList.get(position).getString("numero_ordine");
-            lotto = "_" + jsonObjectArrayList.get(position).getString("lotto_ordine");
+            numero = jsonObjectArrayList.get(position).getString("numeroOrdine");
+            lotto = "_" + jsonObjectArrayList.get(position).getString("lottoOrdine");
             colore = jsonObjectArrayList.get(position).getString("finitura");
-            fine = jsonObjectArrayList.get(position).getInt("inizio_fine");
-            cornici = jsonObjectArrayList.get(position).getInt("n_cornici");
-            pezzi = jsonObjectArrayList.get(position).getInt("n_complementari");
-            dataora = jsonObjectArrayList.get(position).getString("timestamp");
+//            fine = jsonObjectArrayList.get(position).getBoolean("inizioFine");
+            cornici = jsonObjectArrayList.get(position).getInt("nCornici");
+            pezzi = jsonObjectArrayList.get(position).getInt("nComplementari");
+            Date data = new DateFromJsonTimestampString(jsonObjectArrayList.get(position).getString("timestamp")).getDate();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ITALIAN);
+            dataora = sdf.format(data);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -110,8 +120,8 @@ public class Lista_ordini_Adapter extends RecyclerView.Adapter<Lista_ordini_Adap
             JSONObject ordine = this.jsonObjectArrayList.get(position);
             String numero = "", lotto = "";
             try {
-                numero = ordine.getString("numero_ordine");
-                lotto = ordine.getString("lotto_ordine");
+                numero = ordine.getString("numeroOrdine");
+                lotto = ordine.getString("lottoOrdine");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

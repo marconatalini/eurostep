@@ -9,8 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -19,8 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -50,7 +48,7 @@ public class NCI_generica extends Activity {
     String mCurrentPhotoPath;
     Bitmap bitmap;
 
-    private String UPLOAD_URL ="http://"+ MainActivity.WEBSERVER_IP +"/inviaFotoNC.php";
+//    private String UPLOAD_URL ="http://"+ MainActivity.WEBSERVER_IP +"/inviaFotoNC.php";
     private int TAKE_IMAGE_REQUEST = 2;
 
     @Override
@@ -211,6 +209,7 @@ public class NCI_generica extends Activity {
     private void uploadImage(){
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(this,"Caricamento...","Attendi...",false,false);
+        String UPLOAD_URL = String.format("http://%s/nc/foto/upload",MainActivity.WEBSERVER_IP);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -254,12 +253,14 @@ public class NCI_generica extends Activity {
                 params.put("lotto_ordine", lotto);
                 params.put("cod_operatore", operatore);
 
+                params.put("XDEBUG_SESSION_START", "session_name");
+
                 //returning parameters
                 return params;
             }
         };
 
-        int socketTimeout = 30000;//30 seconds - change to what you want
+        int socketTimeout = 10000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
 

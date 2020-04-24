@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.marconatalini.eurostep.tool.Barcoder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,8 +41,10 @@ import java.util.Map;
 
 public class NCI_ordini extends Activity {
 
-    Button btn_scan_ordine, btn_data_soluzione, btn_send;
+    Button btn_scan_ordine, btn_data_soluzione, btn_send, btn_eurostock;
     EditText numero_lotto;
+    Integer ordine;
+    String lotto;
     GridLayout grid_prelievo, grid_taglio, grid_lavorazioni, grid_guarnizioni, grid_imballo, grid_verniciatura, grid_controlli;
     CheckBox prelievo_profili_errati, prelievo_mancanza_barre, prelievo_qualita_estruso;
     CheckBox taglio_barre_difettose, taglio_documenti_insufficienti;
@@ -55,7 +59,7 @@ public class NCI_ordini extends Activity {
     Spinner spinner_erroreIN;
 
     final static int GET_NUMERO_ORDINE = 1;
-    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCO.php";
+//    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCO.php";
 
     Boolean DatiOK = false;
 
@@ -65,7 +69,7 @@ public class NCI_ordini extends Activity {
         setContentView(R.layout.activity_nci_ordini);
 
         final Intent scan = new IntentIntegrator(NCI_ordini.this).createScanIntent();
-        final SocketTask socketTask = new SocketTask(NCI_ordini.this);
+//        final SocketTask socketTask = new SocketTask(NCI_ordini.this);
 
         spinner_erroreIN = (Spinner) findViewById(R.id.spinner_erroreIN);
         ArrayAdapter<CharSequence> lav_adapter = ArrayAdapter.createFromResource(this,
@@ -133,9 +137,11 @@ public class NCI_ordini extends Activity {
         controlli_altro = (CheckBox) findViewById(R.id.check_controlli_altro) ;
 
         btn_send = (Button) findViewById(R.id.btn_send);
+        btn_eurostock = (Button) findViewById(R.id.btn_eurostock);
         nciv_note = (TextView) findViewById(R.id.nciv_note);
         soluzione = (TextView) findViewById(R.id.nciv_soluzione);
         numero_lotto = (EditText) findViewById(R.id.numero_lotto);
+
         TextWatcher numeroWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -149,12 +155,16 @@ public class NCI_ordini extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 8 && (socketTask.checkBarcodeOrdine(s.toString()))) {
+                String ordine_lotto = s.toString();
+                Barcoder bc = new Barcoder(ordine_lotto);
+                ordine = bc.getNumeroOrdine();
+                lotto = bc.getLottoOrdine();
+                if (bc.checkBarcodeOrdine()) {
                     Toast.makeText(NCI_ordini.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
                     DatiOK = true;
                 }
 
-                if (s.length() == 6 && (socketTask.checkNumeroOrdineBarre(s.toString()))){
+                if (bc.isOrdineBarre()){
                     DatiOK = true;
                 }
 
@@ -193,6 +203,7 @@ public class NCI_ordini extends Activity {
 
                                 if (DatiOK) {
                                     btn_send.setEnabled(true);
+                                    btn_eurostock.setEnabled(true);
                                     btn_data_soluzione.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                 } else {
                                     Toast.makeText(NCI_ordini.this, "Controlla il numero ordine.", Toast.LENGTH_SHORT).show();
@@ -209,6 +220,13 @@ public class NCI_ordini extends Activity {
             @Override
             public void onClick(View v) {
                 sendNCIO();
+            }
+        });
+
+        btn_eurostock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWebPageEurostock();
             }
         });
 
@@ -233,27 +251,20 @@ public class NCI_ordini extends Activity {
     private void sendNCIO() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(this, "Invio dati", "Attendi...", false, false);
+        String UPLOAD_URL = String.format("http://%s/nc/ordine", MainActivity.WEBSERVER_IP);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //Disimissing the progress dialog
-                        loading.dismiss();
-                        //Showing toast message of the response
-                        Toast.makeText(NCI_ordini.this, s, Toast.LENGTH_LONG).show();
-                        Log.d("volleyerror", s);
-                        finish();
-                    }
+                response -> {
+                    //Disimissing the progress dialog
+                    loading.dismiss();
+                    //Showing toast message of the response
+                    Toast.makeText(NCI_ordini.this, response, Toast.LENGTH_LONG).show();
+                    finish();
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Dismissing the progress dialog
-                        loading.dismiss();
-                        //Showing toast
-                        Toast.makeText(NCI_ordini.this, volleyError.toString(), Toast.LENGTH_LONG).show();
-                        Log.d("volleyerror", volleyError.toString());
-                    }
+                volleyError -> {
+                    //Dismissing the progress dialog
+                    loading.dismiss();
+                    //Showing toast
+                    Toast.makeText(NCI_ordini.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -339,6 +350,8 @@ public class NCI_ordini extends Activity {
                 params.put("data_soluzione", mdata_soluzione);
                 params.put("chiusa", mchiusa);
 
+                params.put("XDEBUG_SESSION_START", "session_name");
+
                 //returning parameters
                 return params;
             }
@@ -356,4 +369,20 @@ public class NCI_ordini extends Activity {
 
         MySingleton.getInstance(NCI_ordini.this).addToRequestque(stringRequest);
     }
+
+    public void openWebPageEurostock() {
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.encodedPath(MainActivity.FOTO_UPLOAD_URI);
+        uriBuilder.appendQueryParameter("ordine", String.valueOf(ordine));
+        uriBuilder.appendQueryParameter("lotto", lotto);
+        uriBuilder.appendQueryParameter("note", String.valueOf(nciv_note.getText()));
+        uriBuilder.appendQueryParameter("soluzione",  String.valueOf(soluzione.getText()));
+        Uri webpage = Uri.parse(uriBuilder.build().toString());
+        Log.d("meo", uriBuilder.build().toString());
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 }

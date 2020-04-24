@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
 import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
@@ -20,12 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.marconatalini.eurostep.localdb.dbCursor;
-import com.marconatalini.eurostep.tool.Barcoder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,12 +30,10 @@ import java.util.TimerTask;
 import static android.os.SystemClock.elapsedRealtime;
 import static com.marconatalini.eurostep.MainActivity.OPERATORE;
 
-public class LavorazioniActivity extends Activity {
+public class LavorazioniActivitySocket extends Activity {
 
-    dbCursor cursor;
-    long nMemReg;
     Button btn_lav, btn_finelav;
-//    SocketTask socketTask;
+    SocketTask socketTask;
     TextView ServerResponse;
     String ordine_lotto, cod_lav, tipo_lav;
     ListView lista_ordini;
@@ -59,19 +52,13 @@ public class LavorazioniActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lavorazioni);
-//        socketTask = new SocketTask(LavorazioniActivity.this);
+        socketTask = new SocketTask(LavorazioniActivitySocket.this);
         final IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.setPrompt("Scan a barcode");
-//        integrator.setCameraId(0);  // Use a specific camera front of the device
-        integrator.setBeepEnabled(false);
-        integrator.setBarcodeImageEnabled(true);
+        //integrator.setDesiredBarcodeFormats(integrator.QR_CODE_TYPES);
+        //integrator.setCameraId(1); //front
 
         ServerResponse = (TextView) findViewById(R.id.Server_response);
-        cursor = new dbCursor(this.getBaseContext());
-        nMemReg = cursor.getRegistrazioniLocali();
-        ServerResponse.setText(String.format("Hai %d registrazioni in memoria.", nMemReg));
-//        socketTask.setServerResponse(ServerResponse);
+        socketTask.setServerResponse(ServerResponse);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         // Start lengthy operation in a background thread
@@ -111,11 +98,6 @@ public class LavorazioniActivity extends Activity {
                     String str_item = parent.getItemAtPosition(position).toString();
                     btn_lav.setText("Inizio " + str_item.substring(0, str_item.length()-6));
                 }
-
-                if (getTipoLav().equals("M")){
-                    String str_item = parent.getItemAtPosition(position).toString();
-                    btn_lav.setText(str_item.substring(0, str_item.length()-6));
-                }
             }
 
             @Override
@@ -141,8 +123,7 @@ public class LavorazioniActivity extends Activity {
                         timerON = elapsedRealtime();
                         switchButton();
                         ordine_lotto = "999999_9";
-//                        socketTask.sendDati(getCodLav(), ordine_lotto , OPERATORE, 0);
-                        sendDati(getCodLav(), ordine_lotto , OPERATORE, 0, "extras=");
+                        socketTask.sendDati(getCodLav(), ordine_lotto , OPERATORE, 0);
                         arrayList.add(ordine_lotto + " in lavorazione...");
                         adapter.notifyDataSetChanged();
                         break;
@@ -167,15 +148,6 @@ public class LavorazioniActivity extends Activity {
                         integrator.initiateScan();
                         break;
 
-                    case "M" : // invio dati dalla memoria
-                        if (nMemReg > 0){
-                            String url = cursor.getFirstRecord();
-                            sendDatiBatch(url);
-                        } else {
-                            Toast.makeText(LavorazioniActivity.this, "Memoria VUOTA",Toast.LENGTH_LONG).show();
-                            InitGUI();
-                        }
-                        break;
                 }
             }
         });
@@ -184,16 +156,15 @@ public class LavorazioniActivity extends Activity {
             @Override
             public boolean onLongClick(View v) {
                 if (!getTipoLav().equals("0")){
-                    final EditText txtOrdine = new EditText(LavorazioniActivity.this);
-                    new AlertDialog.Builder(LavorazioniActivity.this)
+                    final EditText txtOrdine = new EditText(LavorazioniActivitySocket.this);
+                    new AlertDialog.Builder(LavorazioniActivitySocket.this)
                             .setTitle("Inserimento manuale")
                             .setMessage("Ordine_lotto es.847003_A")
                             .setView(txtOrdine)
                             .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     ordine_lotto = txtOrdine.getText().toString();
-//                                    Boolean check = socketTask.checkBarcodeOrdine(ordine_lotto);
-                                    Boolean check = new Barcoder(ordine_lotto).checkBarcodeOrdine();
+                                    Boolean check = socketTask.checkBarcodeOrdine(ordine_lotto);
                                     if (!check) {
                                         ServerResponse.setText("Scansione codice ANNULLATA");
                                         InitGUI();
@@ -301,7 +272,7 @@ public class LavorazioniActivity extends Activity {
     @Override
     public void onBackPressed(){
         if (arrayList.size() > 0){
-            Toast.makeText(LavorazioniActivity.this,"Premi FINE LAVORO prima di uscire",Toast.LENGTH_SHORT).show();
+            Toast.makeText(LavorazioniActivitySocket.this,"Premi FINE LAVORO prima di uscire",Toast.LENGTH_SHORT).show();
         } else {
             super.onBackPressed();
         }
@@ -313,7 +284,7 @@ public class LavorazioniActivity extends Activity {
         if (result != null) {
             String bc = result.getContents();
 
-            Boolean check = new Barcoder(bc).checkBarcodeOrdine();
+            Boolean check = socketTask.checkBarcodeOrdine(bc);
 
             if (bc == null || !check) {
                 ServerResponse.setText("Scansione codice ANNULLATA");
@@ -330,17 +301,16 @@ public class LavorazioniActivity extends Activity {
 
     private void getBilancelle(){
 
-        final EditText editText = new EditText(LavorazioniActivity.this);
+        final EditText editText = new EditText(LavorazioniActivitySocket.this);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        AlertDialog.Builder builder = new AlertDialog.Builder(LavorazioniActivity.this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(LavorazioniActivitySocket.this)
                 .setTitle("Quante bilancelle occupa?")
                 .setView(editText)
 
                 .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-//                        socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "bilancelle="+editText.getText());
-                        sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "bilancelle="+editText.getText());
+                        socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "bilancelle="+editText.getText());
                         InitGUI();
                     }
                 });
@@ -357,8 +327,7 @@ public class LavorazioniActivity extends Activity {
         }
 
         if (!ordine_lotto.equals("") && !arrayList.contains(ordine_lotto + " in lavorazione...")) {
-//            socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta);
-            sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "extras=");
+            socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta);
             if (!getTipoLav().equals("I") && !getTipoLav().equals("F") ){
                 arrayList.add(ordine_lotto + " in lavorazione...");
                 adapter.notifyDataSetChanged();
@@ -392,68 +361,15 @@ public class LavorazioniActivity extends Activity {
         for (int i = 0; i < arrayList.size(); ++i){
             Log.d("meo","Invio l'ordine :" + arrayList.get(i));
             ordine_lotto = arrayList.get(i).substring(0,8);
-//            socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta);
-            sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "extras=");
+            socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta);
         }
         arrayList.clear();
         adapter.notifyDataSetChanged();
     }
 
-    private void sendDati (String cod_lav, String Ordine_Lotto, String operatore, long seconds, String extras){
-        final String getURL =
-                String.format("http://%s/online/%s?&ordine_lotto=%s&operatore=%s&seconds=%d&%s",
-                        MainActivity.WEBSERVER_IP, cod_lav, Ordine_Lotto, operatore, seconds, extras);
-        Log.d("meo", getURL);
-        ServerResponse.setText(String.format("Invio dati %s ... attendi", Ordine_Lotto));
-
-        StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
-                response -> {
-                    Toast.makeText(LavorazioniActivity.this, response.toString(),Toast.LENGTH_LONG).show();
-                    ServerResponse.setText(String.format("%s inviato! OK", Ordine_Lotto));
-                },
-                error -> {
-                    cursor.saveRecord(getURL); //salvo nel DB locale
-                    ServerResponse.setText(String.format("ERRORE: %s salvato in memoria. ", Ordine_Lotto));
-                    Toast.makeText(LavorazioniActivity.this, error.toString(),Toast.LENGTH_LONG).show();
-                    error.printStackTrace();
-                });
-
-        MySingleton.getInstance(LavorazioniActivity.this).addToRequestque(sRequest);
-    }
-
-    private void sendDatiBatch (String url){
-
-        ServerResponse.setText(String.format("Invio dati memoria ... attendi"));
-        Log.d("meo", url);
-        StringRequest sRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    cursor.deleteFirstRecord();
-                    nMemReg -= 1;
-                    Toast.makeText(LavorazioniActivity.this, response.toString(),Toast.LENGTH_LONG).show();
-                    if (nMemReg > 0) {
-                        ServerResponse.setText(String.format("%d registrazioni in memoria", nMemReg));
-                    }
-
-                    if (nMemReg == 0) {
-                        ServerResponse.setText(String.format("Memoria svuotata!"));
-                        InitGUI();
-                    }
-                },
-                error -> {
-                    Toast.makeText(LavorazioniActivity.this, error.toString(),Toast.LENGTH_LONG).show();
-                    error.printStackTrace();
-                    ServerResponse.setText(String.format("ERRORE: Riprova più tardi. "));
-                });
-
-        MySingleton.getInstance(LavorazioniActivity.this).addToRequestque(sRequest);
-    }
-
-
-
     @Override
     protected void onDestroy() {
         Log.d("meo","Activity DISTRUTTA");
-        cursor.close();
         switch (getTipoLav()){
             case "0":
             case "1": //fine lavoro temporizzato

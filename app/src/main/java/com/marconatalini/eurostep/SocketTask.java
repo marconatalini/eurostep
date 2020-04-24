@@ -14,20 +14,18 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AlertDialog;
+import androidx.core.app.TaskStackBuilder;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -66,8 +64,8 @@ public class SocketTask {
     }
 
     public void notifyMsg(String msg){
-        android.support.v4.app.NotificationCompat.Builder mBuilder =
-                new android.support.v4.app.NotificationCompat.Builder(context)
+        androidx.core.app.NotificationCompat.Builder mBuilder =
+                new androidx.core.app.NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Eurostep")
                         .setContentText(msg);
@@ -322,7 +320,7 @@ public class SocketTask {
         protected void onPostExecute(Boolean result) {
 
             if (result) {
-                ServerResponse.setText("Dati " +ordine_lotto+ " inviati correttamente");
+                ServerResponse.setText("Dati " + ordine_lotto + " inviati correttamente");
                 sendFirstDBrec();
             } else {
                 ContentValues values = new ContentValues();

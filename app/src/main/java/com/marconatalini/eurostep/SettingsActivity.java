@@ -10,13 +10,11 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import androidx.core.app.NavUtils;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -37,6 +35,7 @@ public class SettingsActivity extends PreferenceActivity {
      */
     public static String SERVER_IP  = "server_ip";
     public static String WEBSERVER_IP  = "webserver_ip";
+    public static String FOTO_UPLOAD_URI  = "foto_upload_uri";
     public static String SERVER_PORT  = "server_port";
     public static String OPERATORE = "codice_operatore";
 
@@ -185,9 +184,10 @@ public class SettingsActivity extends PreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("server_ip"));
             bindPreferenceSummaryToValue(findPreference("webserver_ip"));
-            bindPreferenceSummaryToValue(findPreference("server_port"));
+            bindPreferenceSummaryToValue(findPreference("foto_upload_uri"));
+//            bindPreferenceSummaryToValue(findPreference("server_port"));
             bindPreferenceSummaryToValue(findPreference("codice_operatore"));
-            bindPreferenceSummaryToBooleanValue(findPreference("use_volley"));
+//            bindPreferenceSummaryToBooleanValue(findPreference("use_volley"));
         }
 
         @Override

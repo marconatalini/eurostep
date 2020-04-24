@@ -11,12 +11,14 @@
             android:singleLine="true"
             android:title="@string/pref_title_display_name" />
 
+<!--
         <EditTextPreference
             android:capitalize="words"
             android:defaultValue="@string/pref_default_port"
             android:inputType= "number"
             android:key="server_port"
             android:title="@string/pref_title_port_name" />
+-->
 
         <EditTextPreference
             android:capitalize="words"
@@ -28,10 +30,21 @@
             android:singleLine="true"
             android:title="@string/pref_title_webserver_name" />
 
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_foto_upload_uri"
+            android:inputType= "text"
+            android:key="foto_upload_uri"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_foto_upload_uri" />
+
+<!--
         <CheckBoxPreference
             android:key="use_volley"
             android:title="@string/use_volley"
             android:defaultValue="false" />
+-->
 
     </PreferenceCategory>
 
@@ -52,7 +65,7 @@
             android:title="@string/pref_header_update">
             <Preference android:title="Clicca per scaricare l'ultima versione" >
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="http://192.168.29.100/eurostep/app.apk" />
+                    android:data="http://192.168.29.96/public/eurostep/app.apk" />
             </Preference>
         </PreferenceCategory>
 
