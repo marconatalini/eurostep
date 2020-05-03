@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,6 +31,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.marconatalini.eurostep.tool.Barcoder;
+import com.marconatalini.eurostep.tool.Eurostock;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +56,7 @@ public class NCI_ordini extends Activity {
     TextView nciv_note, soluzione;
     RadioButton chiusa;
     Spinner spinner_erroreIN;
+
 
     final static int GET_NUMERO_ORDINE = 1;
 //    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCO.php";
@@ -371,15 +371,13 @@ public class NCI_ordini extends Activity {
     }
 
     public void openWebPageEurostock() {
-        Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder.encodedPath(MainActivity.FOTO_UPLOAD_URI);
-        uriBuilder.appendQueryParameter("ordine", String.valueOf(ordine));
-        uriBuilder.appendQueryParameter("lotto", lotto);
-        uriBuilder.appendQueryParameter("note", String.valueOf(nciv_note.getText()));
-        uriBuilder.appendQueryParameter("soluzione",  String.valueOf(soluzione.getText()));
-        Uri webpage = Uri.parse(uriBuilder.build().toString());
-        Log.d("meo", uriBuilder.build().toString());
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+
+        String note = String.valueOf(nciv_note.getText());
+        String solution = String.valueOf(soluzione.getText());
+        String operatore = MainActivity.OPERATORE;
+
+        Intent intent = new Eurostock(ordine, lotto, operatore, note, solution).IntentOpenWebPage();
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }

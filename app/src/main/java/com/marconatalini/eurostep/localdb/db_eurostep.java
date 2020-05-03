@@ -25,16 +25,22 @@ public class db_eurostep {
     public static abstract class registro implements BaseColumns {
     public static final String TABLE_NAME = "registro";
     public static final String COLUMN_NAME_REGISTRAZIONE_ID = "_id";
-    public static final String COLUMN_NAME_DATI = "dati";
+    public static final String COLUMN_NAME_LAVORAZIONE = "lavorazione";
+    public static final String COLUMN_NAME_ORDINE_LOTTO = "ordine_lotto";
+    public static final String COLUMN_NAME_OPERATORE = "operatore";
+    public static final String COLUMN_NAME_SECONDI = "secondi";
+    public static final String COLUMN_NAME_BILANCELLE = "bilancelle";
     public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
     }
 
     private static final String SQL_CREATE_REGISTRO =
             "CREATE TABLE " + registro.TABLE_NAME + " (" +
                     registro.COLUMN_NAME_REGISTRAZIONE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    registro.COLUMN_NAME_DATI + TEXT_TYPE + COMMA_SEP +
-//                    registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT CURRENT_TIMESTAMP NOT NULL" +
-//                    registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))" +
+                    registro.COLUMN_NAME_LAVORAZIONE + TEXT_TYPE + COMMA_SEP +
+                    registro.COLUMN_NAME_ORDINE_LOTTO + TEXT_TYPE + COMMA_SEP +
+                    registro.COLUMN_NAME_OPERATORE + TEXT_TYPE + COMMA_SEP +
+                    registro.COLUMN_NAME_SECONDI + INT_TYPE + COMMA_SEP +
+                    registro.COLUMN_NAME_BILANCELLE + REAL_TYPE + COMMA_SEP +
                     registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT (DATETIME(CURRENT_TIMESTAMP))" +
                     " )";
 
@@ -43,7 +49,7 @@ public class db_eurostep {
 
     public static class EurostepDbHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.
-        public static final int DATABASE_VERSION = 6;
+        public static final int DATABASE_VERSION = 7;
         public static final String DATABASE_NAME = "eurostep.db";
 
         EurostepDbHelper(Context context) {

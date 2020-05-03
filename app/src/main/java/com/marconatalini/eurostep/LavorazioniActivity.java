@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.collection.ArrayMap;
+
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,12 +30,15 @@ import com.google.zxing.integration.android.IntentResult;
 import com.marconatalini.eurostep.localdb.dbCursor;
 import com.marconatalini.eurostep.tool.Barcoder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.os.SystemClock.elapsedRealtime;
+import static android.text.Html.escapeHtml;
 import static com.marconatalini.eurostep.MainActivity.OPERATORE;
 
 public class LavorazioniActivity extends Activity {
@@ -142,7 +148,7 @@ public class LavorazioniActivity extends Activity {
                         switchButton();
                         ordine_lotto = "999999_9";
 //                        socketTask.sendDati(getCodLav(), ordine_lotto , OPERATORE, 0);
-                        sendDati(getCodLav(), ordine_lotto , OPERATORE, 0, "extras=");
+                        sendDati(getCodLav(), ordine_lotto , OPERATORE, 0, 0);
                         arrayList.add(ordine_lotto + " in lavorazione...");
                         adapter.notifyDataSetChanged();
                         break;
@@ -169,8 +175,8 @@ public class LavorazioniActivity extends Activity {
 
                     case "M" : // invio dati dalla memoria
                         if (nMemReg > 0){
-                            String url = cursor.getFirstRecord();
-                            sendDatiBatch(url);
+                            ArrayMap record = cursor.getFirstRecord();
+                            sendDatiBatch(record);
                         } else {
                             Toast.makeText(LavorazioniActivity.this, "Memoria VUOTA",Toast.LENGTH_LONG).show();
                             InitGUI();
@@ -310,7 +316,7 @@ public class LavorazioniActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
+        if (result.getContents() != null) {
             String bc = result.getContents();
 
             Boolean check = new Barcoder(bc).checkBarcodeOrdine();
@@ -340,7 +346,8 @@ public class LavorazioniActivity extends Activity {
                 .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 //                        socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "bilancelle="+editText.getText());
-                        sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "bilancelle="+editText.getText());
+                        float bilancelle = Float.parseFloat(editText.getText().toString());
+                        sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, bilancelle);
                         InitGUI();
                     }
                 });
@@ -358,7 +365,7 @@ public class LavorazioniActivity extends Activity {
 
         if (!ordine_lotto.equals("") && !arrayList.contains(ordine_lotto + " in lavorazione...")) {
 //            socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta);
-            sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "extras=");
+            sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, 0);
             if (!getTipoLav().equals("I") && !getTipoLav().equals("F") ){
                 arrayList.add(ordine_lotto + " in lavorazione...");
                 adapter.notifyDataSetChanged();
@@ -393,27 +400,27 @@ public class LavorazioniActivity extends Activity {
             Log.d("meo","Invio l'ordine :" + arrayList.get(i));
             ordine_lotto = arrayList.get(i).substring(0,8);
 //            socketTask.sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta);
-            sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, "extras=");
+            sendDati(getCodLav(), ordine_lotto, OPERATORE, timeDelta, 0);
         }
         arrayList.clear();
         adapter.notifyDataSetChanged();
     }
 
-    private void sendDati (String cod_lav, String Ordine_Lotto, String operatore, long seconds, String extras){
-        final String getURL =
-                String.format("http://%s/online/%s?&ordine_lotto=%s&operatore=%s&seconds=%d&%s",
-                        MainActivity.WEBSERVER_IP, cod_lav, Ordine_Lotto, operatore, seconds, extras);
+    private void sendDati (String cod_lav, String ordine_Lotto, String operatore, long seconds, float bilancelle){
+        String getURL =
+                String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s",
+                        MainActivity.WEBSERVER_IP, operatore, cod_lav, ordine_Lotto, seconds, bilancelle);
         Log.d("meo", getURL);
-        ServerResponse.setText(String.format("Invio dati %s ... attendi", Ordine_Lotto));
+        ServerResponse.setText(String.format("Invio dati %s ... attendi", ordine_Lotto));
 
         StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
                 response -> {
                     Toast.makeText(LavorazioniActivity.this, response.toString(),Toast.LENGTH_LONG).show();
-                    ServerResponse.setText(String.format("%s inviato! OK", Ordine_Lotto));
+                    ServerResponse.setText(String.format("%s inviato! OK", ordine_Lotto));
                 },
                 error -> {
-                    cursor.saveRecord(getURL); //salvo nel DB locale
-                    ServerResponse.setText(String.format("ERRORE: %s salvato in memoria. ", Ordine_Lotto));
+                    cursor.saveRecord(cod_lav, ordine_Lotto, operatore, seconds, bilancelle); //salvo nel DB locale
+                    ServerResponse.setText(String.format("ERRORE: %s salvato in memoria. ", ordine_Lotto));
                     Toast.makeText(LavorazioniActivity.this, error.toString(),Toast.LENGTH_LONG).show();
                     error.printStackTrace();
                 });
@@ -421,13 +428,28 @@ public class LavorazioniActivity extends Activity {
         MySingleton.getInstance(LavorazioniActivity.this).addToRequestque(sRequest);
     }
 
-    private void sendDatiBatch (String url){
+    private void sendDatiBatch (ArrayMap record) {
+        if (record.isEmpty()) {
+            return;
+        }
 
+        String timestamp = null;
+        long id = (long) record.get("id");
+
+        try {
+            timestamp = URLEncoder.encode((String) record.get("timestamp"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&registrato_il=%s",
+                MainActivity.WEBSERVER_IP, record.get("operatore"), record.get("cod_lav"), record.get("ordine_lotto"),
+                record.get("seconds"), record.get("bilancelle"), timestamp);
         ServerResponse.setText(String.format("Invio dati memoria ... attendi"));
-        Log.d("meo", url);
-        StringRequest sRequest = new StringRequest(Request.Method.GET, url,
+        Log.d("meo", getURL);
+        StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
                 response -> {
-                    cursor.deleteFirstRecord();
+                    cursor.deleteRecord(id);
                     nMemReg -= 1;
                     Toast.makeText(LavorazioniActivity.this, response.toString(),Toast.LENGTH_LONG).show();
                     if (nMemReg > 0) {

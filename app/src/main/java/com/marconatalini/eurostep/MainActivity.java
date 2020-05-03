@@ -27,6 +27,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.marconatalini.eurostep.deprecated.SocketTask;
+import com.marconatalini.eurostep.tool.Barcoder;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity{
     Button[] buttonlist;
     FloatingActionButton btn_login;
     Animation fab_close;
-    SocketTask socketTask;
 
     @Override
     protected void onResume() {
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        socketTask = new SocketTask(MainActivity.this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setLogo(R.mipmap.ic_launcher2);
@@ -76,8 +76,9 @@ public class MainActivity extends AppCompatActivity{
         Button btn_liste = (Button) findViewById(R.id.btn_liste);
         Button btn_centriLavoro = (Button) findViewById(R.id.btn_CentriLavoro);
         Button btn_problema = (Button) findViewById(R.id.btn_problema);
+        Button btn_speciali = (Button) findViewById(R.id.btn_speciali);
 
-        buttonlist = new Button[]{btn_LA, btn_cianfrinato, btn_vern, btn_centriLavoro, btn_problema, btn_liste}; //, btn_persiane, btn_imballo};
+        buttonlist = new Button[]{btn_LA, btn_cianfrinato, btn_vern, btn_centriLavoro, btn_problema, btn_liste, btn_speciali}; //, btn_persiane, btn_imballo};
 
         SharedPreferences.Editor editPref = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editPref.putString(SettingsActivity.OPERATORE, "");
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity{
         });
 
         final IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.CODE_39, IntentIntegrator.QR_CODE);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +171,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() == 8){
-                    if (socketTask.checkBarcodeOrdine(query)){
+                    Boolean check = new Barcoder(query).checkBarcodeOrdine();
+                    if (check){
                         return false;
                     }
                 }

@@ -1,4 +1,4 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.deprecated;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +19,11 @@ import androidx.appcompat.app.AlertDialog;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.marconatalini.eurostep.MainActivity;
+import com.marconatalini.eurostep.R;
+import com.marconatalini.eurostep.SettingsActivity;
+import com.marconatalini.eurostep.deprecated.db_eurostep;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;

@@ -39,6 +39,14 @@
             android:visibility="visible" />
 
         <Button
+            android:id="@+id/btn_speciali"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/btn_speciali" />
+
+        <Button
             android:id="@+id/btn_CentriLavoro"
             android:layout_width="match_parent"
             android:layout_height="0dp"

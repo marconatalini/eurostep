@@ -1,4 +1,4 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.deprecated;
 
 import android.content.Context;
 import android.database.Cursor;

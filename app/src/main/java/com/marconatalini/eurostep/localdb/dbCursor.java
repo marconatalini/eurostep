@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
+
+import androidx.collection.ArrayMap;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -40,50 +43,43 @@ public class dbCursor {
         return res;
     }
 
-    public void saveRecord(String dati)
+    public void saveRecord(String cod_lav, String ordine_lotto, String operatore, long seconds, float bilancelle)
     {
+        Log.d("meo", "saveRecord: " + ordine_lotto);
         ContentValues values = new ContentValues();
-        values.put(db_eurostep.registro.COLUMN_NAME_DATI, dati);
+        values.put(db_eurostep.registro.COLUMN_NAME_LAVORAZIONE, cod_lav);
+        values.put(db_eurostep.registro.COLUMN_NAME_ORDINE_LOTTO, ordine_lotto);
+        values.put(db_eurostep.registro.COLUMN_NAME_OPERATORE, operatore);
+        values.put(db_eurostep.registro.COLUMN_NAME_SECONDI, seconds);
+        values.put(db_eurostep.registro.COLUMN_NAME_BILANCELLE, bilancelle);
         db.insert(db_eurostep.registro.TABLE_NAME, null, values);
     }
 
-    public String getFirstRecord()
+    public ArrayMap getFirstRecord()
     {
-        Cursor c = db.rawQuery("SELECT _id, dati, timestamp FROM registro ORDER BY _id", null);
+        Cursor c = db.rawQuery("SELECT * FROM registro ORDER BY _id", null);
 
-        String str_dati = null;
-        String str_time = null;
+        ArrayMap record = new ArrayMap<>();
 
         if (c.moveToFirst()) {
-            Long id = c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_REGISTRAZIONE_ID));
-            str_dati = c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_DATI));
-            str_time = c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_TIMESTAMP));
+            record.put("id", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_REGISTRAZIONE_ID)));
+            record.put("cod_lav", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_LAVORAZIONE)));
+            record.put("ordine_lotto", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_ORDINE_LOTTO)));
+            record.put("operatore", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_OPERATORE)));
+            record.put("seconds", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_SECONDI)));
+            record.put("bilancelle", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_BILANCELLE)));
+            record.put("timestamp", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_TIMESTAMP)));
         }
 
-        if (str_dati.length() > 0) {
-            URL url= null;
-            URI uri= null;
-            try {
-                url = new URL(String.format("%s&registrato_il=%s",str_dati, str_time));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                assert url != null;
-                uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
-            assert uri != null;
-            return uri.toASCIIString();
-        }
-
-        return null;
+        return record;
     }
 
-    public void deleteFirstRecord()
+    public void deleteRecord(long id)
+    {
+        db.execSQL(String.format("DELETE FROM registro WHERE _id =%d", id));
+    }
+
+    /*public void deleteFirstRecord()
     {
         Cursor c = db.rawQuery("SELECT _id, dati, timestamp FROM registro ORDER BY _id", null);
 
@@ -92,7 +88,7 @@ public class dbCursor {
             db.execSQL(String.format("DELETE FROM registro WHERE _id =%d", id));
         }
 
-    }
+    }*/
 
     public void playNotifica() {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

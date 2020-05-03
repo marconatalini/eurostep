@@ -1,4 +1,4 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.deprecated;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -30,6 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.marconatalini.eurostep.MainActivity;
+import com.marconatalini.eurostep.MySingleton;
+import com.marconatalini.eurostep.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -209,7 +212,7 @@ public class NCI_generica extends Activity {
     private void uploadImage(){
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(this,"Caricamento...","Attendi...",false,false);
-        String UPLOAD_URL = String.format("http://%s/nc/foto/upload",MainActivity.WEBSERVER_IP);
+        String UPLOAD_URL = String.format("http://%s/nc/foto/upload", MainActivity.WEBSERVER_IP);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 new Response.Listener<String>() {
                     @Override

@@ -29,7 +29,7 @@
     <string name="pref_title_operator_name">Codice Operatore (cartellino)</string>
     <string name="pref_title_auto_invia">Invio dati automatico</string>
     <string name="pref_default_server_ip">192.168.1.104</string>
-    <string name="pref_default_foto_upload_uri">http://192.168.1.104/nc/foto/upload/4</string>
+    <string name="pref_default_foto_upload_uri">http://192.168.1.104:8000/image/upload/4</string>
     <string name="pref_default_webserver_ip">192.168.1.104</string>
     <string name="pref_default_port">8888</string>
     <string name="pref_default_operator">I0056</string>
@@ -233,5 +233,8 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="risposta_del_server">Risposta del server</string>
     <string name="ordini_in_corso">Ordini in corso</string>
+    <string name="btn_speciali">SPECIALI</string>
+    <string name="NCI_verniciatura">"NON conformità VERNICIATURA "</string>
+    <string name="NCI_ordini">NON conformità ORDINE</string>
 
 </resources>

@@ -33,6 +33,7 @@ import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.marconatalini.eurostep.tool.Barcoder;
+import com.marconatalini.eurostep.tool.Eurostock;
 
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -40,10 +41,12 @@ import java.util.Map;
 
 public class NCI_verniciatura extends Activity {
 
-    Button btn_data_vern, btn_ora_vern, btn_scan_ordine, btn_data_soluzione, btn_send;
+    Button btn_data_vern, btn_ora_vern, btn_scan_ordine, btn_data_soluzione, btn_send, btn_eurostock;
     ToggleButton btn_difetto;
     Button btn_agg1, btn_agg2, btn_agg3, btn_ver1, btn_ver2, btn_ver3;
     EditText numero_lotto, marca_polvere;
+    Integer ordine;
+    String lotto;
     TextView xcdcol, xdecol;
     GridLayout grid_entrata, grid_uscita;
     CheckBox difetto_telai, difetto_complementari, difetto_lamiere, difetto_bugne, difetto_barre;
@@ -108,6 +111,7 @@ public class NCI_verniciatura extends Activity {
         du_altro = (CheckBox) findViewById(R.id.check_altro_difetto_uscita);
 
         btn_send = (Button) findViewById(R.id.btn_send);
+        btn_eurostock = (Button) findViewById(R.id.btn_eurostock_ncv);
         xcdcol = (TextView) findViewById(R.id.xcdcol);
         xdecol = (TextView) findViewById(R.id.xdecol);
         marca_polvere = (EditText) findViewById(R.id.marca_polvere);
@@ -130,6 +134,8 @@ public class NCI_verniciatura extends Activity {
             public void afterTextChanged(Editable s) {
                 String ordine_lotto = s.toString();
                 Barcoder bc = new Barcoder(ordine_lotto);
+                ordine = bc.getNumeroOrdine();
+                lotto = bc.getLottoOrdine();
                 if (bc.checkBarcodeOrdine()) {
                     //Toast.makeText(NCI_generica.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
                     getDescrizioneColore(bc.getNumeroOrdine(), bc.getLottoOrdine());
@@ -287,6 +293,7 @@ public class NCI_verniciatura extends Activity {
 
                                 if (DatiOK) {
                                     btn_send.setEnabled(true);
+                                    btn_eurostock.setEnabled(true);
                                     btn_data_soluzione.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                 } else {
                                     Toast.makeText(NCI_verniciatura.this, "Controlla il numero ordine.", Toast.LENGTH_SHORT).show();
@@ -307,6 +314,13 @@ public class NCI_verniciatura extends Activity {
             @Override
             public void onClick(View v) {
                 sendNCIV();
+            }
+        });
+
+        btn_eurostock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWebPageEurostock();
             }
         });
     }
@@ -521,5 +535,18 @@ public class NCI_verniciatura extends Activity {
         };
 
         MySingleton.getInstance(NCI_verniciatura.this).addToRequestque(stringRequest);
+    }
+
+    public void openWebPageEurostock() {
+
+        String note = String.valueOf(nciv_note.getText());
+        String solution = String.valueOf(soluzione.getText());
+        String operatore = MainActivity.OPERATORE;
+
+        Intent intent = new Eurostock(ordine, lotto, operatore, note, solution).IntentOpenWebPage();
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

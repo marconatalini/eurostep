@@ -1,4 +1,4 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.deprecated;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.marconatalini.eurostep.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;

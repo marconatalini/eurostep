@@ -13,33 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="NCI verniciatura" />
+        android:text="@string/NCI_verniciatura" />
 
     <Button
         android:id="@+id/btn_NCI_ordini"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="NCI ordini" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/btn_NCI_generica"
-        android:text="allega foto NC"/>
+        android:text="@string/NCI_ordini" />
 
     <androidx.legacy.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/btn_foto_ok"
-        android:text="fotografa un bel prodotto"
-        android:enabled="false"/>
+        android:layout_weight="2" />
 
 </LinearLayout>
