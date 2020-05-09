@@ -3,23 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.marconatalini.eurostep">
 
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
     <application
-        android:hardwareAccelerated="true"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher2"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".MainLavorazioniActivity"
+            android:label="@string/title_activity_main_lavorazioni"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.marconatalini.eurostep.fileprovider"
@@ -88,17 +96,19 @@
         <activity
             android:name=".NCIActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"
-            />
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".NCI_ordini"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <!-- Include the host attribute if you want your app to respond
-                     only to URLs with your app's domain. -->
-                    <data android:scheme="http" />
+                <!--
+                     Include the host attribute if you want your app to respond
+                     only to URLs with your app's domain.
+                -->
+                <data android:scheme="http" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <!-- The BROWSABLE category is required to get links from web pages. -->
                 <category android:name="android.intent.category.BROWSABLE" />

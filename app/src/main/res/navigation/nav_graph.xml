@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/lavorazione_MenuFragment">
+
+    <fragment
+        android:id="@+id/lavorazione_MenuFragment"
+        android:name="com.marconatalini.eurostep.Lavorazione_MenuFragment"
+        android:label="fragment_lavorazione_menu"
+        tools:layout="@layout/fragment_lavorazione_menu">
+
+        <action
+            android:id="@+id/action_MenuFragment_to_Lavorazione1Fragment"
+            app:destination="@id/lavorazione_1Fragment" />
+        <action
+            android:id="@+id/action_MenuFragment_to_Lavorazione2Fragment"
+            app:destination="@id/lavorazione_2Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/lavorazione_1Fragment"
+        android:name="com.marconatalini.eurostep.Lavorazione_1Fragment"
+        android:label="fragment_lavorazione_1"
+        tools:layout="@layout/fragment_lavorazione_1">
+        <argument
+            android:name="lavorazione"
+            app:argType="com.marconatalini.eurostep.entity.Lavorazione"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/lavorazione_2Fragment"
+        android:name="com.marconatalini.eurostep.Lavorazione_2Fragment"
+        android:label="fragment_lavorazione_2"
+        tools:layout="@layout/fragment_lavorazione_2" >
+        <argument
+            android:name="lavorazione"
+            app:argType="com.marconatalini.eurostep.entity.Lavorazione"
+            app:nullable="true" />
+    </fragment>
+</navigation>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Lavorazioni>
+    <!-- Descrizione (codice tipo)
+                tipo 0 = inizio/fine lavorazione senza ordine
+                tipo 1 = inizio/fine
+                tipo 2 = selezione ordini multipli (cianfrinato)
+                tipo I = inizio lavorazione non temporizzata
+                tipo F = fine lavorazione non temporizzata
+                tipo M = scarico dati dalla memoria
+                -->
+
+    <lavorazione
+        descrizione="Taglio Materiale"
+        codice="A1"
+        tipo="1"
+        colore="#f94144"
+        />
+    <lavorazione
+        descrizione="Lamiere"
+        codice="A2"
+        tipo="1"
+        colore="#f3722c"
+        />
+    <lavorazione
+        descrizione="Lavorazioni CNC"
+        codice="C1"
+        tipo="1"
+        colore="#f8961e"
+        />
+    <lavorazione
+        descrizione="Puntatura"
+        codice="S1"
+        tipo="1"
+        colore="#f9c74f"
+        />
+    <lavorazione
+        descrizione="Saldatura"
+        codice="S2"
+        tipo="1"
+        colore="#90be6d"
+        />
+    <lavorazione
+        descrizione="Fresatura"
+        codice="S3"
+        tipo="1"
+        colore="#43aa8b"
+        />
+    <lavorazione
+        descrizione="Levigatura"
+        codice="S4"
+        tipo="1"
+        colore="#577590"
+        />
+
+    <lavorazione
+        descrizione="Zoccoli/Traversi"
+        codice="S5"
+        tipo="1"
+        colore="#f94144"
+        />
+    <lavorazione
+        descrizione="Levigatura Finale"
+        codice="S6"
+        tipo="1"
+        colore="#f3722c"
+        />
+    <lavorazione
+        descrizione="Entrata rep.verniciatura"
+        codice="V1"
+        tipo="I"
+        colore="#f8961e"
+        />
+    <lavorazione
+        descrizione="Uscita rep.verniciatura"
+        codice="V1"
+        tipo="F"
+        colore="#f9c74f"
+        />
+    <lavorazione
+        descrizione="Entrata forno"
+        codice="V2"
+        tipo="I"
+        colore="#90be6d"
+        />
+    <lavorazione
+        descrizione="Uscita forno"
+        codice="V2"
+        tipo="F"
+        colore="#43aa8b"
+        />
+    <lavorazione
+        descrizione="Cianfrinatura"
+        codice="C2"
+        tipo="2"
+        colore="#577590"
+        />
+
+    <lavorazione
+        descrizione="Montaggio guarnizioni"
+        codice="G1"
+        tipo="1"
+        colore="#f94144"
+        />
+    <lavorazione
+        descrizione="Imballaggio"
+        codice="I1"
+        tipo="1"
+        colore="#f3722c"
+        />
+    <lavorazione
+        descrizione="Pulizia reparto"
+        codice="P1"
+        tipo="0"
+        colore="#f8961e"
+        />
+    <lavorazione
+        descrizione="Invio dati memoria"
+        codice="MM"
+        tipo="M"
+        colore="#f9c74f"
+        />
+    <lavorazione
+        descrizione="--------"
+        codice=""
+        tipo=""
+        colore="#90be6d"
+        />
+    <lavorazione
+        descrizione="--------"
+        codice=""
+        tipo=""
+        colore="#43aa8b"
+        />
+    <lavorazione
+        descrizione="--------"
+        codice=""
+        tipo=""
+        colore="#577590"
+        />
+
+</Lavorazioni>

@@ -16,7 +16,6 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:id="@+id/lista_lavorazioni"
         android:layout_marginBottom="20dp"
         android:spinnerMode="dialog"/>
@@ -25,14 +24,12 @@
         android:text="Scegli Ordine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:id="@+id/btn_lavorazione" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_centerHorizontal="true"
         android:id="@+id/lista_ordini" />
 
     <ProgressBar

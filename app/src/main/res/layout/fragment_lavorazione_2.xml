@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Lavorazione_2Fragment">
+
+    <Button
+        android:id="@+id/btn_inizio2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/inizioLavoro" />
+
+    <ListView
+        android:id="@+id/listaOrdiniLavorazione2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btn_fine2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="@string/fineLavoro" />
+
+    <TextView
+        android:id="@+id/server_info2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="..." />
+</LinearLayout>

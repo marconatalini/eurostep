@@ -106,6 +106,16 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        btn_speciali.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!OPERATORE.equals("")){
+                    Intent openLavorazioni = new Intent(MainActivity.this, MainLavorazioniActivity.class);
+                    startActivity(openLavorazioni);
+                }
+            }
+        });
+
         btn_problema.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

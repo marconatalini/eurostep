@@ -77,30 +77,8 @@ public class LavorazioniActivity extends Activity {
         cursor = new dbCursor(this.getBaseContext());
         nMemReg = cursor.getRegistrazioniLocali();
         ServerResponse.setText(String.format("Hai %d registrazioni in memoria.", nMemReg));
-//        socketTask.setServerResponse(ServerResponse);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        // Start lengthy operation in a background thread
-        /*new Thread(new Runnable() {
-            public void run() {
-                while (mProgressStatus < 100) {
-                    sleep(300);
-                    if (isStart){
-                        mProgressStatus += 1;
-                    }
-
-                    // Update the progress bar
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            progressBar.setProgress(mProgressStatus);
-                        }
-                    });
-                }
-                socketTask.playNotifica();
-                progressBar.setIndeterminate(true);
-            }
-        }).start();*/
-
 
 
         final Spinner spinner_lav = (Spinner) findViewById(R.id.lista_lavorazioni);
