@@ -1,5 +1,7 @@
 package com.marconatalini.eurostep;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,22 +15,25 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.marconatalini.eurostep.entity.Lavorazione;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Lavorazione_MenuFragment extends Fragment {
 
     private FlexboxLayout flexboxLayout;
-
+    private SharedPreferences sharedPref;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_lavorazione_menu, container, false);
     }
@@ -45,20 +50,13 @@ public class Lavorazione_MenuFragment extends Fragment {
         }catch(IOException | XmlPullParserException e){
             e.printStackTrace();
         }
-
-        /*view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(Lavorazione_MenuFragment.this)
-                        .navigate(R.id.action_MenuFragment_to_Lavorazione1Fragment);
-            }
-        });*/
-
     }
 
     // Custom method to process XML data
     private void processXMLData(XmlResourceParser parser)throws IOException,XmlPullParserException{
         int eventType = -1;
+
+        String lastUsedLavCode = sharedPref.getString(getString(R.string.last_select_lavorazione_code), "");
 
         // Loop through the XML data
         while(eventType!=parser.END_DOCUMENT){
@@ -70,7 +68,7 @@ public class Lavorazione_MenuFragment extends Fragment {
                     String tipo = parser.getAttributeValue(null,"tipo");
                     String colore = parser.getAttributeValue(null,"colore");
                     Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore );
-                    addButton(Lav);
+                    addButton(Lav, lastUsedLavCode);
                 }
             }
             /*
@@ -96,15 +94,22 @@ public class Lavorazione_MenuFragment extends Fragment {
     }
 
     // Custom method to format XML data to display
-    private void addButton(Lavorazione Lav){
+    private void addButton(Lavorazione Lav, String lastUsedLavCode){
+        SharedPreferences.Editor editor = sharedPref.edit();
+
         Button btn = new Button(this.getContext());
         btn.setText(Lav.getDescrizione());
 
         FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(
-                FlexboxLayout.LayoutParams.WRAP_CONTENT,
-                FlexboxLayout.LayoutParams.WRAP_CONTENT
+                FlexboxLayout.LayoutParams.WRAP_CONTENT,200
         );
         lp.setFlexGrow(2);
+        lp.setOrder(2);
+        lp.setMargins(7,15,7,0);
+
+        if (Lav.getCodice().equals(lastUsedLavCode) && !Lav.getCodice().equals("P1")){
+            lp.setOrder(1); // metto per prima l'ultima usata, tranne se pulizia
+        }
 
         btn.setLayoutParams(lp);
         btn.setBackgroundColor(Color.parseColor(Lav.getColore()));
@@ -118,6 +123,8 @@ public class Lavorazione_MenuFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         setTitleMainActivity(Lav.getDescrizione());
+                        editor.putString(getString(R.string.last_select_lavorazione_code), Lav.getCodice());
+                        editor.apply();
                         Lavorazione_MenuFragmentDirections.ActionMenuFragmentToLavorazione1Fragment action =
                                 Lavorazione_MenuFragmentDirections.actionMenuFragmentToLavorazione1Fragment(Lav);
 
@@ -131,6 +138,8 @@ public class Lavorazione_MenuFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         setTitleMainActivity(Lav.getDescrizione());
+                        editor.putString(getString(R.string.last_select_lavorazione_code), Lav.getCodice());
+                        editor.apply();
                         Lavorazione_MenuFragmentDirections.ActionMenuFragmentToLavorazione2Fragment action =
                                 Lavorazione_MenuFragmentDirections.actionMenuFragmentToLavorazione2Fragment(Lav);
 

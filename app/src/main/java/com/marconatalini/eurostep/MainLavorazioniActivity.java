@@ -1,6 +1,7 @@
 package com.marconatalini.eurostep;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.android.volley.Request;

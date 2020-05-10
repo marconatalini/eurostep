@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
         SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.1.104");
         WEBSERVER_IP = sharedPref.getString(SettingsActivity.WEBSERVER_IP, "192.168.1.104");
         FOTO_UPLOAD_URI = sharedPref.getString(SettingsActivity.FOTO_UPLOAD_URI, "http://192.168.1.104/nc/foto/upload");
-        SERVER_PORT = Integer.valueOf(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
+        SERVER_PORT = Integer.parseInt(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
         OPERATORE = sharedPref.getString(SettingsActivity.OPERATORE, "");
         //USEVOLLEY = sharedPref.getBoolean(SettingsActivity.USEVOLLEY, false);
 
@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity{
 
         SharedPreferences.Editor editPref = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editPref.putString(SettingsActivity.OPERATORE, "");
-        editPref.commit();
+//        editPref.commit();
+        editPref.apply();
 
         btn_LA.setOnClickListener(new View.OnClickListener() {
             @Override
