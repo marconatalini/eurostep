@@ -117,8 +117,12 @@ public class SocketTask {
         this.context = context;
         PreferenceManager.setDefaultValues(context, R.xml.pref_general, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
-        this.SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.29.255");
-        this.SERVER_PORT = Integer.valueOf(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
+//        this.SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.29.255");
+//        this.SERVER_PORT = Integer.valueOf(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
+
+        //only for compile without error
+        this.SERVER_IP = "192.168.29.255";
+        this.SERVER_PORT = 8888;
     }
 
     public void manualInput(final String last_lav_cod, final String OPERATORE, final Integer tempo){

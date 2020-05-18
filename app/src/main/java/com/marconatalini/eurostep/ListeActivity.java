@@ -24,35 +24,55 @@ public class ListeActivity extends Activity implements View.OnClickListener{
         cianfrinatura.setOnClickListener(this);
         verniciatura.setOnClickListener(this);
         cnc.setOnClickListener(this);
+
+        /*Button webBtn = findViewById(R.id.btn_web);
+        webBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListeActivity.this, WebActivity.class);
+                String getUrl = String.format("http://%s/api/registrazioni/%s", MainActivity.WEBSERVER_IP, MainActivity.OPERATORE);
+                intent.putExtra("URL", getUrl);
+                startActivity(intent);
+            }
+        });*/
     }
+
+
 
     @Override
     public void onClick(View v) {
-        Intent lista = new Intent(ListeActivity.this, Lista_ordini_la.class);
+//        Intent lista = new Intent(ListeActivity.this, Lista_ordini_la.class);
 //        lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/lista_ordiniLA.php");
 
+        Intent intent = new Intent(ListeActivity.this, WebActivity.class);
+        String getUrl = "";
 
         if (v == dati_inviati) {
-            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/registrazioni/"+MainActivity.OPERATORE);
-            lista.putExtra("titolo_lista", "Registro fine lavoro");
+            getUrl = String.format("http://%s/api/registrazioni/%s", MainActivity.WEBSERVER_IP, MainActivity.OPERATORE);
+//            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/registrazioni/"+MainActivity.OPERATORE);
+//            lista.putExtra("titolo_lista", "Registro fine lavoro");
 //            lista.putExtra("phpquery", "DatiInviati");
         }
         if (v == cianfrinatura) {
-            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniCianfrinatura");
-            lista.putExtra("titolo_lista", "Ordini da cianfrinare");
+            getUrl = String.format("http://%s/api/listaordini/cianfrinatura", MainActivity.WEBSERVER_IP);
+//            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniCianfrinatura");
+//            lista.putExtra("titolo_lista", "Ordini da cianfrinare");
 //            lista.putExtra("phpquery", "ArrivoInCianfrinatura");
         }
         if (v == verniciatura) {
-            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniVerniciatura");
-            lista.putExtra("titolo_lista", "Ordini già levigati");
+            getUrl = String.format("http://%s/api/listaordini/verniciatura", MainActivity.WEBSERVER_IP);
+//            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniVerniciatura");
+//            lista.putExtra("titolo_lista", "Ordini già levigati");
 //            lista.putExtra("phpquery", "ArrivoInVerniciatura");
         }
         if (v == cnc) {
-            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniCNC");
-            lista.putExtra("titolo_lista", "Ordini con lavorazioni");
+            getUrl = String.format("http://%s/api/listaordini/cnc", MainActivity.WEBSERVER_IP);
+//            lista.putExtra("json_url","http://"+ MainActivity.WEBSERVER_IP +"/ordiniCNC");
+//            lista.putExtra("titolo_lista", "Ordini con lavorazioni");
 //            lista.putExtra("phpquery", "OrdiniCNC");
         }
 
-        startActivity(lista);
+        intent.putExtra("URL", getUrl);
+        startActivity(intent);
     }
 }

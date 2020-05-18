@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.marconatalini.eurostep.deprecated.Lista_ordini_Adapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;

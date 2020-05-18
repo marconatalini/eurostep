@@ -9,9 +9,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.StringRequest;
-import com.marconatalini.eurostep.LavorazioniActivity;
 import com.marconatalini.eurostep.MainActivity;
-import com.marconatalini.eurostep.MainLavorazioniActivity;
 import com.marconatalini.eurostep.MySingleton;
 import com.marconatalini.eurostep.localdb.dbCursor;
 
@@ -68,9 +66,10 @@ public class Registrazione {
                     onRecordSavedListener.onRecordSaved();
                 });
 
-        /*int socketTimeout = 5000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        sRequest.setRetryPolicy(policy);*/
+        int timeout = 5000;
+        int retries = 0;
+        RetryPolicy policy = new DefaultRetryPolicy(timeout, retries, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        sRequest.setRetryPolicy(policy);
 
         MySingleton.getInstance(context).addToRequestque(sRequest);
     }

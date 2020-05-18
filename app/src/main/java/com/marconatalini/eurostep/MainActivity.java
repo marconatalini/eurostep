@@ -4,6 +4,8 @@ import android.app.Application;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,10 +32,15 @@ import com.google.zxing.integration.android.IntentResult;
 import com.marconatalini.eurostep.deprecated.SocketTask;
 import com.marconatalini.eurostep.tool.Barcoder;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 public class MainActivity extends AppCompatActivity{
 
-    private int SERVER_PORT = 0;
-    private String SERVER_IP = "";
+//    private int SERVER_PORT = 0;
+//    private String SERVER_IP = "";
     public static String WEBSERVER_IP = "", FOTO_UPLOAD_URI = "";
     public static String OPERATORE = "", NOME_OPERATORE = "";
     Button[] buttonlist;
@@ -45,10 +52,10 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.1.104");
+//        SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.1.104");
         WEBSERVER_IP = sharedPref.getString(SettingsActivity.WEBSERVER_IP, "192.168.1.104");
         FOTO_UPLOAD_URI = sharedPref.getString(SettingsActivity.FOTO_UPLOAD_URI, "http://192.168.1.104/nc/foto/upload");
-        SERVER_PORT = Integer.parseInt(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
+//        SERVER_PORT = Integer.parseInt(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
         OPERATORE = sharedPref.getString(SettingsActivity.OPERATORE, "");
         //USEVOLLEY = sharedPref.getBoolean(SettingsActivity.USEVOLLEY, false);
 
@@ -70,22 +77,22 @@ public class MainActivity extends AppCompatActivity{
 
         btn_login = (FloatingActionButton) findViewById(R.id.fab_login);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
-        Button btn_LA = (Button) findViewById(R.id.btn_LA);
-        Button btn_vern = (Button) findViewById(R.id.btn_verniciatura);
-        Button btn_cianfrinato = (Button) findViewById(R.id.btn_Cianfrinatura);
-        Button btn_liste = (Button) findViewById(R.id.btn_liste);
-        Button btn_centriLavoro = (Button) findViewById(R.id.btn_CentriLavoro);
-        Button btn_problema = (Button) findViewById(R.id.btn_problema);
+//        Button btn_LA = (Button) findViewById(R.id.btn_LA);
+//        Button btn_vern = (Button) findViewById(R.id.btn_verniciatura);
+//        Button btn_cianfrinato = (Button) findViewById(R.id.btn_Cianfrinatura);
+//        Button btn_centriLavoro = (Button) findViewById(R.id.btn_CentriLavoro);
         Button btn_speciali = (Button) findViewById(R.id.btn_speciali);
+        Button btn_liste = (Button) findViewById(R.id.btn_liste);
+        Button btn_problema = (Button) findViewById(R.id.btn_problema);
 
-        buttonlist = new Button[]{btn_LA, btn_cianfrinato, btn_vern, btn_centriLavoro, btn_problema, btn_liste, btn_speciali}; //, btn_persiane, btn_imballo};
+        buttonlist = new Button[]{btn_problema, btn_liste, btn_speciali};
 
         SharedPreferences.Editor editPref = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editPref.putString(SettingsActivity.OPERATORE, "");
 //        editPref.commit();
         editPref.apply();
 
-        btn_LA.setOnClickListener(new View.OnClickListener() {
+        /*btn_LA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (OPERATORE != "") {
@@ -94,8 +101,17 @@ public class MainActivity extends AppCompatActivity{
                     startActivity(openRepartoLA);
                 }
             }
-        });
+        });*/
 
+        btn_speciali.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!OPERATORE.equals("")){
+                    Intent openLavorazioni = new Intent(MainActivity.this, MainLavorazioniActivity.class);
+                    startActivity(openLavorazioni);
+                }
+            }
+        });
 
         btn_liste.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,15 +123,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        btn_speciali.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!OPERATORE.equals("")){
-                    Intent openLavorazioni = new Intent(MainActivity.this, MainLavorazioniActivity.class);
-                    startActivity(openLavorazioni);
-                }
-            }
-        });
 
         btn_problema.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +153,12 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        SocketTask msgserver = new SocketTask(this);
-        msgserver.startServerMsg();
+//        SocketTask msgserver = new SocketTask(this);
+//        msgserver.startServerMsg();
+
+        if (getConnection()) {
+            btn_login.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+        }
     }
 
     @Override
@@ -287,4 +298,31 @@ public class MainActivity extends AppCompatActivity{
         MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
     }
 
+    private boolean getConnection() {
+        try {
+            Enumeration<NetworkInterface> enumNetworkInterfaces = NetworkInterface
+                    .getNetworkInterfaces();
+            while (enumNetworkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = enumNetworkInterfaces
+                        .nextElement();
+                Enumeration<InetAddress> enumInetAddress = networkInterface
+                        .getInetAddresses();
+                while (enumInetAddress.hasMoreElements()) {
+                    InetAddress inetAddress = enumInetAddress.nextElement();
+
+                    if (inetAddress.isSiteLocalAddress()) {
+                        String ip = String.format("IP: %s", inetAddress.getHostAddress());
+                        return true;
+                    }
+
+                }
+
+            }
+
+        } catch (SocketException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

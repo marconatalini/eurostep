@@ -1,4 +1,4 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.deprecated;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.marconatalini.eurostep.R;
+import com.marconatalini.eurostep.SettingsActivity;
 import com.marconatalini.eurostep.tool.DateFromJsonTimestampString;
 
 import org.json.JSONException;

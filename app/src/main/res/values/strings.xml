@@ -22,15 +22,15 @@
     <string name="pref_header_update">Aggiornamento</string>
 
 
-    <string name="pref_title_display_name">IP server</string>
-    <string name="pref_title_webserver_name">IP www</string>
+<!--    <string name="pref_title_display_name">IP server</string>-->
+    <string name="pref_title_webserver_name">Serverweb IP</string>
     <string name="pref_title_foto_upload_uri">Indirizzo upload foto</string>
-    <string name="pref_title_port_name">Listen port</string>
+<!--    <string name="pref_title_port_name">Listen port</string>-->
     <string name="pref_title_operator_name">Codice Operatore (cartellino)</string>
     <string name="pref_title_auto_invia">Invio dati automatico</string>
-    <string name="pref_default_server_ip">192.168.1.104</string>
-    <string name="pref_default_foto_upload_uri">http://192.168.1.104:8000/image/upload/4</string>
-    <string name="pref_default_webserver_ip">192.168.1.104</string>
+    <string name="pref_default_server_ip">192.168.29.96</string>
+    <string name="pref_default_foto_upload_uri">http://192.168.29.97/image/upload/4</string>
+    <string name="pref_default_webserver_ip">192.168.29.96</string>
     <string name="pref_default_port">8888</string>
     <string name="pref_default_operator">I0056</string>
     <string name="pref_auto_invia">Regista il codice a barre in automatico</string>
@@ -253,5 +253,7 @@
     <string name="TitleLavorazione2">Lavorazione tipo 2</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="last_select_lavorazione_code">ultimaLavorazioneScelta</string>
+
+    <string name="title_activity_eurodb_web">EurodbWebActivity</string>
 
 </resources>

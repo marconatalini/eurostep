@@ -1,4 +1,4 @@
-package com.marconatalini.eurostep;
+package com.marconatalini.eurostep.deprecated;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 
 import android.text.InputType;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +26,9 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.marconatalini.eurostep.MainActivity;
+import com.marconatalini.eurostep.MySingleton;
+import com.marconatalini.eurostep.R;
 import com.marconatalini.eurostep.localdb.dbCursor;
 import com.marconatalini.eurostep.tool.Barcoder;
 
@@ -38,7 +40,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.os.SystemClock.elapsedRealtime;
-import static android.text.Html.escapeHtml;
 import static com.marconatalini.eurostep.MainActivity.OPERATORE;
 
 public class LavorazioniActivity extends Activity {

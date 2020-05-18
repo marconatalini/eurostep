@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.marconatalini.eurostep.LavorazioniActivity">
+    tools:context="com.marconatalini.eurostep.deprecated.LavorazioniActivity">
 
     <TextView
         android:layout_width="match_parent"

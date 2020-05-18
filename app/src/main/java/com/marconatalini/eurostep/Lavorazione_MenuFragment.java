@@ -43,6 +43,9 @@ public class Lavorazione_MenuFragment extends Fragment {
 
         flexboxLayout = (FlexboxLayout) view.findViewById(R.id.menu_flexbox_layout);
 
+        View layout = view.getRootView();
+        layout.setBackgroundColor(getResources().getColor(R.color.design_default_color_background));
+
         XmlResourceParser parser = getResources().getXml(R.xml.items_lavorazioni);
         // Process the XML data
         try{

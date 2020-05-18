@@ -33,10 +33,10 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    public static String SERVER_IP  = "server_ip";
+//    public static String SERVER_IP  = "server_ip";
     public static String WEBSERVER_IP  = "webserver_ip";
     public static String FOTO_UPLOAD_URI  = "foto_upload_uri";
-    public static String SERVER_PORT  = "server_port";
+//    public static String SERVER_PORT  = "server_port";
     public static String OPERATORE = "codice_operatore";
 
     public static String SHOW_FINITURA = "show_finitura";
@@ -182,7 +182,7 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("server_ip"));
+//            bindPreferenceSummaryToValue(findPreference("server_ip"));
             bindPreferenceSummaryToValue(findPreference("webserver_ip"));
             bindPreferenceSummaryToValue(findPreference("foto_upload_uri"));
 //            bindPreferenceSummaryToValue(findPreference("server_port"));

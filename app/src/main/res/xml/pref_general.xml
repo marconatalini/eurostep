@@ -1,6 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/pref_header_general">
+
+        <!--
         <EditTextPreference
             android:capitalize="words"
             android:defaultValue="@string/pref_default_server_ip"
@@ -10,6 +12,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/pref_title_display_name" />
+-->
 
 <!--
         <EditTextPreference
@@ -65,8 +68,15 @@
             android:title="@string/pref_header_update">
             <Preference android:title="Clicca per scaricare l'ultima versione" >
                 <intent android:action="android.intent.action.VIEW"
-                    android:data="http://192.168.29.96/public/eurostep/app.apk" />
+                    android:data="http://192.168.29.96/api/update" />
             </Preference>
         </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Gestione dati memoria">
+        <Preference android:title="Clicca per visualizzare le registrazioni" >
+            <intent android:action="com.marconatalini.eurostep.AndroidDatabaseManager" />
+        </Preference>
+    </PreferenceCategory>
 
 </PreferenceScreen>

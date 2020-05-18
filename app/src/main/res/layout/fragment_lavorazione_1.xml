@@ -43,5 +43,6 @@
         android:id="@+id/server_info"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="..." />
+        android:text="..."
+        android:textAlignment="center" />
 </LinearLayout>
