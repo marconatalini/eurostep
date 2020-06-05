@@ -61,7 +61,7 @@ public class NCI_ordini extends Activity {
     final static int GET_NUMERO_ORDINE = 1;
 //    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCO.php";
 
-    Boolean DatiOK = false;
+//    Boolean DatiOK = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,17 +155,20 @@ public class NCI_ordini extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String ordine_lotto = s.toString();
-                Barcoder bc = new Barcoder(ordine_lotto);
-                ordine = bc.getNumeroOrdine();
-                lotto = bc.getLottoOrdine();
-                if (bc.checkBarcodeOrdine()) {
-                    Toast.makeText(NCI_ordini.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
-                    DatiOK = true;
-                }
 
-                if (bc.isOrdineBarre()){
-                    DatiOK = true;
+                if (s.length() == 8) {
+                    String ordine_lotto = s.toString();
+                    Barcoder bc = new Barcoder(ordine_lotto);
+                    ordine = bc.getNumeroOrdine();
+                    lotto = bc.getLottoOrdine();
+                    if (bc.checkBarcodeOrdine()) {
+//                        Toast.makeText(NCI_ordini.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
+                        setDatiOK(true);
+                    }
+
+                    if (bc.isOrdineBarre()){
+                        setDatiOK(true);
+                    }
                 }
 
             }
@@ -201,13 +204,7 @@ public class NCI_ordini extends Activity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                if (DatiOK) {
-                                    btn_send.setEnabled(true);
-                                    btn_eurostock.setEnabled(true);
-                                    btn_data_soluzione.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                                } else {
-                                    Toast.makeText(NCI_ordini.this, "Controlla il numero ordine.", Toast.LENGTH_SHORT).show();
-                                }
+                                btn_data_soluzione.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
 
                             }
                         }, mYear, mMonth, mDay);
@@ -381,6 +378,11 @@ public class NCI_ordini extends Activity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    private void setDatiOK(boolean flag){
+        btn_send.setEnabled(flag);
+        btn_eurostock.setEnabled(flag);
     }
 
 }

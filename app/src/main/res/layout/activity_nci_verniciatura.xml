@@ -479,6 +479,12 @@
             android:ems="10"
             android:inputType="textCapSentences|textMultiLine" />
 
+        <TextView
+            style="@style/titolo_paragrafo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Data soluzione" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

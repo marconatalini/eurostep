@@ -144,15 +144,15 @@
         colore="#f94144"
         />
     <lavorazione
-        descrizione=""
-        codice=""
-        tipo=""
+        descrizione="Assemblaggio persiane"
+        codice="A3"
+        tipo="1"
         colore="#f3722c"
         />
     <lavorazione
-        descrizione=""
-        codice=""
-        tipo=""
+        descrizione="CNC persiane QUADRA"
+        codice="C3"
+        tipo="1"
         colore="#f8961e"
         />
     <lavorazione

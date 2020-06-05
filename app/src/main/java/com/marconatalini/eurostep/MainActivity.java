@@ -14,6 +14,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +33,17 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.marconatalini.eurostep.deprecated.SocketTask;
 import com.marconatalini.eurostep.tool.Barcoder;
+import com.marconatalini.eurostep.tool.TraceDroidHttpSender;
+
+import org.ligi.tracedroid.TraceDroid;
+import org.ligi.tracedroid.sending.TraceDroidEmailSender;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -46,6 +54,8 @@ public class MainActivity extends AppCompatActivity{
     Button[] buttonlist;
     FloatingActionButton btn_login;
     Animation fab_close;
+
+    private static final String TAG = "meo";
 
     @Override
     protected void onResume() {
@@ -59,8 +69,19 @@ public class MainActivity extends AppCompatActivity{
         OPERATORE = sharedPref.getString(SettingsActivity.OPERATORE, "");
         //USEVOLLEY = sharedPref.getBoolean(SettingsActivity.USEVOLLEY, false);
 
-        if (!OPERATORE.equals("")) {
+        /*if (!OPERATORE.equals("")) {
             unhide_btn(buttonlist);
+        }*/
+
+        Pattern pCodOperatore = Pattern.compile("^[8IO][0-9L]\\d{3}$");
+        Matcher matchCodOperatore= pCodOperatore.matcher(OPERATORE);
+
+        if (matchCodOperatore.find()){
+            unhide_btn(buttonlist);
+        } else {
+            if (!OPERATORE.equals("")) {
+                Toast.makeText(this, OPERATORE + " : è un codice sbagliato! Ricontrolla.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -68,6 +89,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        TraceDroidEmailSender.sendStackTraces("your@email.org", this);
+        TraceDroid.init(this);
+        TraceDroidHttpSender.sendStackTraces(this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setLogo(R.mipmap.ic_launcher2);
@@ -169,6 +194,7 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(this, "Scansione ANNULLATA", Toast.LENGTH_LONG).show();
             } else {
                 String op = result.getContents().substring(2);
+                Log.d(TAG, "onActivityResult: PRE LOGIN");
                 loginOperatore(op);
             }
         } else {
@@ -242,9 +268,11 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void loginOperatore(final String cartellino){
+    private void loginOperatore(String cartellino){
 //        String LOGINAPP_URL ="http://"+ WEBSERVER_IP +"/loginapp.php";
-        String LOGINAPP_URL ="http://"+ WEBSERVER_IP +"/login/"+cartellino+"?appversion="+ BuildConfig.VERSION_CODE;
+//        String LOGINAPP_URL ="http://"+ WEBSERVER_IP +"/login/"+cartellino+"?appversion="+ BuildConfig.VERSION_CODE;
+        String LOGINAPP_URL = String.format("http://%s/login/%s?appversion=%s", WEBSERVER_IP, cartellino, BuildConfig.VERSION_CODE);
+
         Toast.makeText(MainActivity.this, LOGINAPP_URL , Toast.LENGTH_LONG).show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGINAPP_URL,
                 new Response.Listener<String>() {
@@ -253,7 +281,7 @@ public class MainActivity extends AppCompatActivity{
 
                         if (s.equals("Update")) {
                             Toast.makeText(MainActivity.this, "Chiudi l'applicazione aggiorna",Toast.LENGTH_LONG).show();
-                            Uri updatepage = Uri.parse("http://"+ WEBSERVER_IP +"/eurostep/app.apk");
+                            Uri updatepage = Uri.parse("http://"+ WEBSERVER_IP +"/api/update");
                             Intent update = new Intent(Intent.ACTION_VIEW, updatepage);
                             startActivity(update);
                             finish();
@@ -278,7 +306,7 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
-                        Toast.makeText(MainActivity.this, "Errore server: riprova..", Toast.LENGTH_LONG).show(); //volleyError.getMessage().toString()
+                        Toast.makeText(MainActivity.this, "Errore server: riprova.." + volleyError.toString(), Toast.LENGTH_LONG).show(); //volleyError.getMessage().toString()
                     }
                 }){
             /*@Override
@@ -296,6 +324,7 @@ public class MainActivity extends AppCompatActivity{
         };
 
         MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
+        Log.d(TAG, "onActivityResult: POST LOGIN");
     }
 
     private boolean getConnection() {

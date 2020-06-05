@@ -25,18 +25,18 @@ import android.widget.ToggleButton;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.marconatalini.eurostep.tool.Barcoder;
 import com.marconatalini.eurostep.tool.Eurostock;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 public class NCI_verniciatura extends Activity {
@@ -71,7 +71,7 @@ public class NCI_verniciatura extends Activity {
 //    private String COLORE_URL = "http://" + MainActivity.WEBSERVER_IP + "/getColoreAS.php";
 
 
-    Boolean DatiOK = false;
+//    Boolean DatiOK = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,7 @@ public class NCI_verniciatura extends Activity {
         setContentView(R.layout.activity_nci_verniciatura);
         final Intent scan = new IntentIntegrator(NCI_verniciatura.this).createScanIntent();
 //        final SocketTask socketTask = new SocketTask(NCI_verniciatura.this);
+
 
         difetto_telai = (CheckBox) findViewById(R.id.check_telai);
         difetto_complementari = (CheckBox) findViewById(R.id.check_complementari);
@@ -117,6 +118,8 @@ public class NCI_verniciatura extends Activity {
         marca_polvere = (EditText) findViewById(R.id.marca_polvere);
         nciv_note = (TextView) findViewById(R.id.nciv_note);
         soluzione = (TextView) findViewById(R.id.nciv_soluzione);
+        soluzione.setText("Riverniciare");
+
         numero_lotto = (EditText) findViewById(R.id.numero_lotto);
 
         TextWatcher numeroWatcher = new TextWatcher() {
@@ -132,18 +135,21 @@ public class NCI_verniciatura extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String ordine_lotto = s.toString();
-                Barcoder bc = new Barcoder(ordine_lotto);
-                ordine = bc.getNumeroOrdine();
-                lotto = bc.getLottoOrdine();
-                if (bc.checkBarcodeOrdine()) {
-                    //Toast.makeText(NCI_generica.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
-                    getDescrizioneColore(bc.getNumeroOrdine(), bc.getLottoOrdine());
-                    DatiOK = true;
-                }
 
-                if (bc.isOrdineBarre()){
-                    DatiOK = true;
+                if (s.length() == 8) {
+                    String ordine_lotto = s.toString();
+                    Barcoder bc = new Barcoder(ordine_lotto);
+                    ordine = bc.getNumeroOrdine();
+                    lotto = bc.getLottoOrdine();
+                    if (bc.checkBarcodeOrdine()) {
+                        //Toast.makeText(NCI_generica.this,"Numero OK: " + s.toString(),Toast.LENGTH_SHORT).show();
+                        getDescrizioneColore(bc.getNumeroOrdine(), bc.getLottoOrdine());
+                        setDatiOK(true);
+                    }
+
+                    if (bc.isOrdineBarre()){
+                        setDatiOK(true);
+                    }
                 }
 
             }
@@ -224,7 +230,11 @@ public class NCI_verniciatura extends Activity {
         });
 
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALIAN);
+        SimpleDateFormat orarioFormat = new SimpleDateFormat("HH:mm", Locale.ITALIAN);
+
         btn_data_vern = (Button) findViewById(R.id.btn_data_verniciatura);
+        btn_data_vern.setText(dateFormat.format(new Date()));
         btn_data_vern.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,6 +261,7 @@ public class NCI_verniciatura extends Activity {
         });
 
         btn_ora_vern = (Button) findViewById(R.id.btn_ora_verniciatura);
+        btn_ora_vern.setText(orarioFormat.format(new Date()));
         btn_ora_vern.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -267,7 +278,7 @@ public class NCI_verniciatura extends Activity {
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
 
-                                btn_ora_vern.setText(" " + hourOfDay + ":" + minute); //spazio iniziale per concatenarla
+                                btn_ora_vern.setText(hourOfDay + ":" + minute);
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
@@ -275,6 +286,8 @@ public class NCI_verniciatura extends Activity {
         });
 
         btn_data_soluzione = (Button) findViewById(R.id.btn_data_soluzione);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALIAN);
+        btn_data_soluzione.setText(dateFormat.format(new Date()));
         btn_data_soluzione.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,14 +304,7 @@ public class NCI_verniciatura extends Activity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                if (DatiOK) {
-                                    btn_send.setEnabled(true);
-                                    btn_eurostock.setEnabled(true);
-                                    btn_data_soluzione.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                                } else {
-                                    Toast.makeText(NCI_verniciatura.this, "Controlla il numero ordine.", Toast.LENGTH_SHORT).show();
-                                }
-
+                                btn_data_soluzione.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -385,7 +391,7 @@ public class NCI_verniciatura extends Activity {
                 String mlotto_ordine = numero_lotto.getText().toString().substring(7, 8);
                 String mcod_operatore = MainActivity.OPERATORE;
                 String mxcdcol = xcdcol.getText().toString();
-                String mdataora_verniciatura = btn_data_vern.getText().toString() + btn_ora_vern.getText().toString();
+                String mdataora_verniciatura = btn_data_vern.getText().toString() + " " + btn_ora_vern.getText().toString();
                 String mmarca_polvere = marca_polvere.getText().toString();
                 String mcod_agganciatore1 = btn_agg1.getText().toString().equalsIgnoreCase("OPERATORE") ? "" : btn_agg1.getText().toString();
                 String mcod_agganciatore2 = btn_agg2.getText().toString().equalsIgnoreCase("OPERATORE") ? "" : btn_agg2.getText().toString();
@@ -482,9 +488,9 @@ public class NCI_verniciatura extends Activity {
             }
         };
 
-        int socketTimeout = 30000;//30 seconds - change to what you want
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
+//        int socketTimeout = 30000;//30 seconds - change to what you want
+//        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+//        stringRequest.setRetryPolicy(policy);
 
         //Creating a Request Queue
         //RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -499,6 +505,8 @@ public class NCI_verniciatura extends Activity {
         //Showing the progress dialog
 //        String COLORE_URL = "http://" + MainActivity.WEBSERVER_IP + "/colore";
         String COLORE_URL = String.format("http://%s/nc/colore/%d/%s", MainActivity.WEBSERVER_IP, numeroOrdine, ordine_lotto);
+
+        Log.d("meo", "getDescrizioneColore: " + COLORE_URL);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, COLORE_URL,
                 response -> {
@@ -548,5 +556,10 @@ public class NCI_verniciatura extends Activity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    private void setDatiOK(boolean flag){
+        btn_send.setEnabled(flag);
+        btn_eurostock.setEnabled(flag);
     }
 }
