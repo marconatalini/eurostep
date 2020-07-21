@@ -1,26 +1,21 @@
 package com.marconatalini.eurostep;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.StringRequest;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.marconatalini.eurostep.entity.Registrazione;
-import com.marconatalini.eurostep.localdb.dbCursor;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.collection.ArrayMap;
-import androidx.fragment.app.Fragment;
 
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RetryPolicy;
+import com.android.volley.toolbox.StringRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.marconatalini.eurostep.entity.Registrazione;
+import com.marconatalini.eurostep.localdb.dbCursor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -69,9 +64,9 @@ public class MainLavorazioniActivity extends AppCompatActivity  implements Regis
             e.printStackTrace();
         }
 
-        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&registrato_il=%s",
+        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&carrello=%s&registrato_il=%s",
                 MainActivity.WEBSERVER_IP, record.get("operatore"), record.get("cod_lav"), record.get("ordine_lotto"),
-                record.get("seconds"), record.get("bilancelle"), timestamp);
+                record.get("seconds"), record.get("bilancelle"), record.get("carrello"), timestamp);
 
         snackMsg("Invio dati memoria ... attendi");
         Log.d("meo", getURL);
@@ -85,6 +80,11 @@ public class MainLavorazioniActivity extends AppCompatActivity  implements Regis
                     snackMsg(error.toString().substring(0,30) + "... Riprova più tardi");
                     error.printStackTrace();
                 });
+
+        int timeout = 5000;
+        int retries = 0;
+        RetryPolicy policy = new DefaultRetryPolicy(timeout, retries, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        sRequest.setRetryPolicy(policy);
 
         MySingleton.getInstance(MainLavorazioniActivity.this).addToRequestque(sRequest);
     }

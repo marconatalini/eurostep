@@ -7,6 +7,7 @@ import com.marconatalini.eurostep.MainActivity;
 import com.marconatalini.eurostep.entity.Lavorazione;
 import com.marconatalini.eurostep.entity.Registrazione;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,13 +31,13 @@ public class Barcoder {
         if (s.length() >= 6) {
             this.numeroOrdine = Integer.valueOf(s.substring(0,6));
             if (s.length() == 8) {
-            this.lottoOrdine = s.substring(7,8);
+            this.lottoOrdine = s.substring(-1);
             }
         }
     }
 
     public Boolean isValid() {
-        return isValid;
+        return this.isValid;
     }
 
     public Integer getNumeroOrdine()
@@ -51,28 +52,25 @@ public class Barcoder {
 
     public String getOrdineLotto()
     {
-        if (lottoOrdine == ""){
-            return numeroOrdine + "_0";
+        if (this.lottoOrdine.equals("")){
+            return this.numeroOrdine + "_0";
         } else {
-            return numeroOrdine + "_" + lottoOrdine;
+            return this.numeroOrdine + "_" + this.lottoOrdine;
         }
     }
 
     public Boolean checkBarcodeOrdine (){ //No underscore
-        try {
-            splitBarcode(barcode);
-        } catch (Exception e) {
-            return Boolean.FALSE;
-        }
 
-        if (barcode == null) return Boolean.FALSE;
+        if (this.barcode.equals("")) return Boolean.FALSE;
 
-        Pattern pOrdine = Pattern.compile("^[85]\\d{5}[ _][\\dA-Z]$");
-        Matcher matchNumero= pOrdine.matcher(barcode.substring(0,8));
+        Pattern pOrdine = Pattern.compile("(^[85]\\d{5})[ _]([\\dA-Z])");
+        Matcher matchNumero= pOrdine.matcher(this.barcode);
 
         if (!matchNumero.find()){
             return Boolean.FALSE;
         } else {
+            this.numeroOrdine = Integer.valueOf(Objects.requireNonNull(matchNumero.group(1)));
+            this.lottoOrdine = matchNumero.group(2);
             return Boolean.TRUE;
         }
     }

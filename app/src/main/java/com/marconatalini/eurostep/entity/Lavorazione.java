@@ -9,6 +9,8 @@ public class Lavorazione implements Parcelable {
     private String codice;
     private String tipo;
     private String colore;
+    private String needCart;
+    private String cartCode;
 
 
     public static final String TEMPORIZZATA_SENZA_NUMERO = "0";
@@ -17,11 +19,13 @@ public class Lavorazione implements Parcelable {
     public static final String SOLO_INIZIO = "I";
     public static final String SOLO_FINE = "F";
 
-    public Lavorazione(String descrizione, String codice, String tipo, String colore) {
+    public Lavorazione(String descrizione, String codice, String tipo, String colore, String needCart, String cartCode) {
         this.descrizione = descrizione;
         this.codice = codice;
         this.tipo = tipo;
         this.colore = colore;
+        this.needCart = needCart;
+        this.cartCode = cartCode;
     }
 
     protected Lavorazione(Parcel in) {
@@ -29,6 +33,8 @@ public class Lavorazione implements Parcelable {
         codice = in.readString();
         tipo = in.readString();
         colore = in.readString();
+        needCart = in.readString();
+        cartCode = in.readString();
     }
 
     public static final Creator<Lavorazione> CREATOR = new Creator<Lavorazione>() {
@@ -49,6 +55,8 @@ public class Lavorazione implements Parcelable {
                 "descrizione='" + descrizione + '\'' +
                 ", codice='" + codice + '\'' +
                 ", tipo='" + tipo + '\'' +
+                ", needCart='" + needCart + '\'' +
+                ", cartCode='" + cartCode + '\'' +
                 '}';
     }
 
@@ -84,6 +92,22 @@ public class Lavorazione implements Parcelable {
         this.colore = colore;
     }
 
+    public String getNeedCart() {
+        return needCart;
+    }
+
+    public void setNeedCart(String needCart) {
+        this.needCart = needCart;
+    }
+
+    public String getCartCode() {
+        return cartCode;
+    }
+
+    public void setCartCode(String cartCode) {
+        this.cartCode = cartCode;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -95,5 +119,7 @@ public class Lavorazione implements Parcelable {
         dest.writeString(codice);
         dest.writeString(tipo);
         dest.writeString(colore);
+        dest.writeString(needCart);
+        dest.writeString(cartCode);
     }
 }

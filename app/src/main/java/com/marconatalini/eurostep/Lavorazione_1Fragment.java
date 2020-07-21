@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -127,6 +129,13 @@ public class Lavorazione_1Fragment extends Fragment {
                 numeroOrdine.setText("Premi inizio.");
                 Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
                 registrazione.setSeconds(timeDelta);
+
+                //Carrello richiesto
+                if (L.getNeedCart().equals("1")){
+                    getCarrello(registrazione, L.getCartCode());
+                    return;
+                }
+
                 registrazione.sendDati(getContext(), serverInfo);
             }
         });
@@ -189,14 +198,27 @@ public class Lavorazione_1Fragment extends Fragment {
             numeroOrdine.setText(ordine_lotto);
             Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
 
+            if (L.getTipo().equals(Lavorazione.SOLO_FINE)){
+                registrazione.setSeconds(1); //fine lavoro
+            }
+
+            //Entrata in forno
             if (L.getTipo().equals(Lavorazione.SOLO_INIZIO) && L.getCodice().equals("V2")){
                 getBilancelle(registrazione);
                 return;
             }
 
-            if (L.getTipo().equals(Lavorazione.SOLO_FINE)){
-                registrazione.setSeconds(1); //fine lavoro
+            /*if (L.getTipo().equals(Lavorazione.SOLO_INIZIO) && L.getCodice().equals("A0")){
+                getCarrello(registrazione);
+                return;
+            }*/
+
+            //Carrello richiesto
+            if (L.getNeedCart().equals("1") && registrazione.getSeconds()>0){
+                getCarrello(registrazione, L.getCartCode());
+                return;
             }
+
             registrazione.sendDati(getContext(), serverInfo);
         }
 
@@ -228,5 +250,31 @@ public class Lavorazione_1Fragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
+    private void getCarrello(Registrazione registrazione, String cartCode){
+        final EditText editText = new EditText(getActivity());
+//        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(String.format("%s : numero carrello x%s?", registrazione.getOrdine_lotto(),cartCode))
+                .setView(editText)
+
+                .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+//                        String carrello = editText.getText().toString().toUpperCase().trim().replaceAll("\\s+","");
+                        String carrello = editText.getText().toString();
+                        registrazione.setCarrello(String.format("%s%s", carrello, cartCode));
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                })
+                ;
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
 }

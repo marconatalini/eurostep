@@ -70,7 +70,9 @@ public class Lavorazione_MenuFragment extends Fragment {
                     String codice = parser.getAttributeValue(null,"codice");
                     String tipo = parser.getAttributeValue(null,"tipo");
                     String colore = parser.getAttributeValue(null,"colore");
-                    Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore );
+                    String needCart = parser.getAttributeValue(null,"needCart");
+                    String cartCode = parser.getAttributeValue(null,"cartCode");
+                    Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore, needCart, cartCode );
                     addButton(Lav, lastUsedLavCode);
                 }
             }

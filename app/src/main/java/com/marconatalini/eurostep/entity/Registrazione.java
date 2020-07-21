@@ -19,6 +19,7 @@ public class Registrazione {
     private String codice;
     private String ordine_lotto;
     private String operatore;
+    private String carrello = "";
     private long seconds = 0;
     private float bilancelle = 0.0f;
     private boolean erroreInvioDati = false;
@@ -31,6 +32,14 @@ public class Registrazione {
         this.ordine_lotto = ordine_lotto;
         this.operatore = operatore;
 
+    }
+
+    public void setCarrello(String carrello) {
+        this.carrello = carrello;
+    }
+
+    public long getSeconds() {
+        return seconds;
     }
 
     public void setSeconds(long seconds) {
@@ -48,8 +57,8 @@ public class Registrazione {
             throw new ClassCastException(context.toString() + " must implement OnRecordSavedListener");
         }
 
-        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s",
-                        MainActivity.WEBSERVER_IP, operatore, codice, ordine_lotto, seconds, bilancelle);
+        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&carrello=%s",
+                        MainActivity.WEBSERVER_IP, operatore, codice, ordine_lotto, seconds, bilancelle, carrello);
         Log.d("meo", "sendDati: " + getURL);
         ServerResponse.setText(String.format("Invio dati %s in corso...", ordine_lotto));
         StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
@@ -59,7 +68,7 @@ public class Registrazione {
                 },
                 error -> {
                     cursor = new dbCursor(context);
-                    cursor.saveRecord(codice, ordine_lotto, operatore, seconds, bilancelle); //salvo nel DB locale
+                    cursor.saveRecord(codice, ordine_lotto, operatore, seconds, bilancelle, carrello); //salvo nel DB locale
                     ServerResponse.setText(String.format("ERRORE: %s salvato in memoria. ", ordine_lotto));
                     Toast.makeText(context, error.toString(),Toast.LENGTH_LONG).show();
                     error.printStackTrace();
@@ -80,5 +89,8 @@ public class Registrazione {
         void onRecordSaved();
     }
 
+    public String getOrdine_lotto() {
+        return ordine_lotto;
+    }
 }
 

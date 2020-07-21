@@ -27,6 +27,8 @@ import com.marconatalini.eurostep.tool.Barcoder;
 
 import java.util.ArrayList;
 
+import static android.os.SystemClock.elapsedRealtime;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 public class Lavorazione_2Fragment extends Fragment {
 
     private Lavorazione L;
+    private long timerON = 0;
     private TextView serverInfo;
     private ListView lista_ordini;
     private String ordine_lotto;
@@ -126,7 +129,7 @@ public class Lavorazione_2Fragment extends Fragment {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result.getContents() != null) {
             sendDati(result.getContents());
-            btnFine.setEnabled(true);
+
         } else {
             // This is important, otherwise the result will not be passed to the fragment
             serverInfo.setText("Scansione codice ANNULLATA");
@@ -153,6 +156,11 @@ public class Lavorazione_2Fragment extends Fragment {
         } else {
             ordine_lotto = barcoder.getOrdineLotto();
 
+            if (arrayList.size() == 0) {
+                //primo ordine parte il timer
+                timerON = elapsedRealtime();
+            }
+
             if (!arrayList.contains(ordine_lotto + " in lavorazione...")) {
                 arrayList.add(ordine_lotto + " in lavorazione...");
                 adapter.notifyDataSetChanged();
@@ -163,16 +171,21 @@ public class Lavorazione_2Fragment extends Fragment {
             } else {
                 serverInfo.setText(String.format("Ordine %s già aggiunto alla lista", ordine_lotto));
             }
+            btnFine.setEnabled(true);
         }
     }
 
     private void sendDatiFineLavoro() {
+        long timerOFF = elapsedRealtime();
+        long timeDelta = (timerOFF-timerON)/1000 + 1; //secondi lavoro
+
         for (int i = 0; i < arrayList.size(); ++i) {
             Log.d("meo", "Invio l'ordine :" + arrayList.get(i));
             ordine_lotto = arrayList.get(i).substring(0, 8);
 
             Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
-            registrazione.setSeconds(1); //fine lavoro
+
+            registrazione.setSeconds(timeDelta); //fine lavoro
             registrazione.sendDati(getContext(), serverInfo);
         }
 

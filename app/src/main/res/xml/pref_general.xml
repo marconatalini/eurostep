@@ -33,6 +33,7 @@
             android:singleLine="true"
             android:title="@string/pref_title_webserver_name" />
 
+        <!-- http://192.168.1.104:8000/image/upload/4" for test local-->
         <EditTextPreference
             android:defaultValue="@string/pref_default_foto_upload_uri"
             android:inputType= "text"
