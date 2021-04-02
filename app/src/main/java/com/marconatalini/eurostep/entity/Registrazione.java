@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
@@ -13,7 +15,7 @@ import com.marconatalini.eurostep.MainActivity;
 import com.marconatalini.eurostep.MySingleton;
 import com.marconatalini.eurostep.localdb.dbCursor;
 
-public class Registrazione {
+public class Registrazione implements Cloneable{
 
     private Context context;
     private String codice;
@@ -23,6 +25,7 @@ public class Registrazione {
     private long seconds = 0;
     private float bilancelle = 0.0f;
     private boolean erroreInvioDati = false;
+    private int multiordine = 1;
     dbCursor cursor;
     OnRecordSavedListener onRecordSavedListener;
 
@@ -32,6 +35,24 @@ public class Registrazione {
         this.ordine_lotto = ordine_lotto;
         this.operatore = operatore;
 
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public int getMultiordine() {
+        return multiordine;
+    }
+
+    public void setMultiordine(int multiordine) {
+        this.multiordine = multiordine;
+    }
+
+    public void setCodice(String codice) {
+        this.codice = codice;
     }
 
     public void setCarrello(String carrello) {
@@ -57,8 +78,8 @@ public class Registrazione {
             throw new ClassCastException(context.toString() + " must implement OnRecordSavedListener");
         }
 
-        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&carrello=%s",
-                        MainActivity.WEBSERVER_IP, operatore, codice, ordine_lotto, seconds, bilancelle, carrello);
+        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&carrello=%s&multiordine=%s",
+                        MainActivity.WEBSERVER_IP, operatore, codice, ordine_lotto, seconds, bilancelle, carrello, multiordine);
         Log.d("meo", "sendDati: " + getURL);
         ServerResponse.setText(String.format("Invio dati %s in corso...", ordine_lotto));
         StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
@@ -68,7 +89,7 @@ public class Registrazione {
                 },
                 error -> {
                     cursor = new dbCursor(context);
-                    cursor.saveRecord(codice, ordine_lotto, operatore, seconds, bilancelle, carrello); //salvo nel DB locale
+                    cursor.saveRecord(codice, ordine_lotto, operatore, seconds, bilancelle, carrello,1); //salvo nel DB locale
                     ServerResponse.setText(String.format("ERRORE: %s salvato in memoria. ", ordine_lotto));
                     Toast.makeText(context, error.toString(),Toast.LENGTH_LONG).show();
                     error.printStackTrace();

@@ -11,11 +11,6 @@ import android.util.Log;
 
 import androidx.collection.ArrayMap;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 public class dbCursor {
 
     Context context;
@@ -43,7 +38,7 @@ public class dbCursor {
         return res;
     }
 
-    public void saveRecord(String cod_lav, String ordine_lotto, String operatore, long seconds, float bilancelle, String carrello)
+    public void saveRecord(String cod_lav, String ordine_lotto, String operatore, long seconds, float bilancelle, String carrello, long multiordine)
     {
         Log.d("meo", "saveRecord: " + ordine_lotto);
         ContentValues values = new ContentValues();
@@ -53,6 +48,7 @@ public class dbCursor {
         values.put(db_eurostep.registro.COLUMN_NAME_SECONDI, seconds);
         values.put(db_eurostep.registro.COLUMN_NAME_BILANCELLE, bilancelle);
         values.put(db_eurostep.registro.COLUMN_NAME_CARRELLO, carrello);
+        values.put(db_eurostep.registro.COLUMN_NAME_MULTIORDINE, multiordine);
         db.insert(db_eurostep.registro.TABLE_NAME, null, values);
     }
 
@@ -70,6 +66,7 @@ public class dbCursor {
             record.put("seconds", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_SECONDI)));
             record.put("bilancelle", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_BILANCELLE)));
             record.put("carrello", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_CARRELLO)));
+            record.put("multiordine", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_MULTIORDINE)));
             record.put("timestamp", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_TIMESTAMP)));
         }
 

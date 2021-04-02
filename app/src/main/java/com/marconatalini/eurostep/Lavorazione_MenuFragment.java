@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.marconatalini.eurostep.entity.Lavorazione;
+import com.marconatalini.eurostep.tool.LavorazioniParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.Objects;
 
 public class Lavorazione_MenuFragment extends Fragment {
@@ -46,12 +50,26 @@ public class Lavorazione_MenuFragment extends Fragment {
         View layout = view.getRootView();
         layout.setBackgroundColor(getResources().getColor(R.color.design_default_color_background));
 
-        XmlResourceParser parser = getResources().getXml(R.xml.items_lavorazioni);
-        // Process the XML data
+        /*XmlResourceParser parser = getResources().getXml(R.xml.items_lavorazioni);
         try{
             processXMLData(parser);
         }catch(IOException | XmlPullParserException e){
             e.printStackTrace();
+        }*/
+
+        LavorazioniParser lavorazioniParser = new LavorazioniParser();
+        List <Lavorazione> entries = null;
+
+        try {
+            entries = lavorazioniParser.readLavorazioni(getResources().getXml(R.xml.lavorazioni));
+        }catch(IOException | XmlPullParserException e){
+            e.printStackTrace();
+        }
+
+        assert entries != null;
+        String lastUsedLavCode = sharedPref.getString(getString(R.string.last_select_lavorazione_code), "");
+        for (Lavorazione lavorazione: entries) {
+            addButton(lavorazione, lastUsedLavCode);
         }
     }
 
@@ -70,12 +88,17 @@ public class Lavorazione_MenuFragment extends Fragment {
                     String codice = parser.getAttributeValue(null,"codice");
                     String tipo = parser.getAttributeValue(null,"tipo");
                     String colore = parser.getAttributeValue(null,"colore");
+                    String linkedTo = parser.getAttributeValue(null,"linkedTo");
                     String needCart = parser.getAttributeValue(null,"needCart");
                     String cartCode = parser.getAttributeValue(null,"cartCode");
-                    Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore, needCart, cartCode );
+
+                    Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore, linkedTo, needCart, cartCode );
                     addButton(Lav, lastUsedLavCode);
+
                 }
+
             }
+            eventType = parser.next();
             /*
                 The method next() advances the parser to the next event. The int value returned from
                 next determines the current parser state and is identical to the value returned
@@ -94,7 +117,6 @@ public class Lavorazione_MenuFragment extends Fragment {
                     END_DOCUMENT
                         No more events are available
             */
-            eventType = parser.next();
         }
     }
 
@@ -123,6 +145,7 @@ public class Lavorazione_MenuFragment extends Fragment {
             case Lavorazione.TEMPORIZZATA_SENZA_NUMERO: //inizio lavoro senza numero
             case Lavorazione.SOLO_INIZIO: //lavoro non temporizzato > INZIO
             case Lavorazione.SOLO_FINE: //lavoro non temporizzato > FINE
+            case Lavorazione.TEMPORIZZATA_MANUALE: //lavoro temporizzato in manuale
             case Lavorazione.TEMPORIZZATA: //lavoro con inizio e fine
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override

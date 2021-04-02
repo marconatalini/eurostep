@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RetryPolicy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -322,6 +324,11 @@ public class MainActivity extends AppCompatActivity{
                 return params;
             }*/
         };
+
+        /*int timeout = 5000;
+        int retries = 3;
+        RetryPolicy policy = new DefaultRetryPolicy(timeout, retries, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);*/
 
         MySingleton.getInstance(MainActivity.this).addToRequestque(stringRequest);
         Log.d(TAG, "onActivityResult: POST LOGIN");

@@ -5,24 +5,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.marconatalini.eurostep.entity.Lavorazione;
+import com.marconatalini.eurostep.entity.LinkStep;
 import com.marconatalini.eurostep.entity.Registrazione;
 import com.marconatalini.eurostep.tool.Barcoder;
 
@@ -35,6 +40,8 @@ public class Lavorazione_1Fragment extends Fragment {
     private TextView serverInfo, numeroOrdine;
     private String ordine_lotto;
     private Button btnInizio, btnFine;
+    private String carrello;
+    private Boolean registrazioneInviata = false;
 
     private IntentIntegrator integrator;
 
@@ -74,7 +81,6 @@ public class Lavorazione_1Fragment extends Fragment {
             }
         }
 
-
         btnInizio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,17 +97,45 @@ public class Lavorazione_1Fragment extends Fragment {
             }
         });
 
+        TextWatcher numeroWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 8) {
+                    String ordine_lotto = s.toString();
+                    Barcoder bc = new Barcoder(ordine_lotto);
+                    if (bc.checkBarcodeOrdine()) {
+                        getClienteOrdine(bc.getNumeroOrdine().toString(), bc.getLottoOrdine().toString());
+                    }
+                }
+
+            }
+        };
+
         btnInizio.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if (!L.getTipo().equals(Lavorazione.TEMPORIZZATA_SENZA_NUMERO)) {
                     final EditText txtOrdine = new EditText(getActivity());
-                    new AlertDialog.Builder(getActivity())
+                    txtOrdine.addTextChangedListener(numeroWatcher);
+
+                    AlertDialog numDialog = new AlertDialog.Builder(getActivity())
                             .setTitle("Inserimento manuale")
                             .setMessage("Ordine_lotto es.847003_A")
                             .setView(txtOrdine)
                             .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
+
                                     timerON = elapsedRealtime();
                                     switchButton();
                                     sendDati(txtOrdine.getText().toString());
@@ -112,7 +146,8 @@ public class Lavorazione_1Fragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                 }
                             })
-                            .show();
+                            .create();
+                    numDialog.show();
                 } else {
                     btnInizio.performClick();
                 }
@@ -125,18 +160,38 @@ public class Lavorazione_1Fragment extends Fragment {
             public void onClick(View v) {
                 long timerOFF = elapsedRealtime();
                 long timeDelta = (timerOFF-timerON)/1000 + 1; //secondi lavoro
+                boolean registrata = false;
                 switchButton();
                 numeroOrdine.setText("Premi inizio.");
                 Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
                 registrazione.setSeconds(timeDelta);
 
+
                 //Carrello richiesto
                 if (L.getNeedCart().equals("1")){
                     getCarrello(registrazione, L.getCartCode());
-                    return;
+                    registrata = true;
+                } else {
+                    //tipo 2: richiesta minuti
+                    if (L.getTipo().equals(Lavorazione.TEMPORIZZATA_MANUALE)){
+                        getMinuti(registrazione);
+                        registrata = true;
+                    }
                 }
 
-                registrazione.sendDati(getContext(), serverInfo);
+                //Has linkStep
+                if (L.getLinkSteps().size()>0) {
+                    try {
+                        Registrazione clonedReg = (Registrazione)registrazione.clone();
+                        askForLinkedLav(L, clonedReg);
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (!registrata) {
+                    registrazione.sendDati(getContext(), serverInfo);
+                }
             }
         });
     }
@@ -154,28 +209,7 @@ public class Lavorazione_1Fragment extends Fragment {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result.getContents() != null) {
             sendDati(result.getContents());
-            /*String bc = result.getContents();
 
-            Boolean check = new Barcoder(bc).isValid();
-
-            if (!check) {
-                serverInfo.setText(String.format("Codice ERRATO (%s): Prova inserimento manuale tenendo premuto il tasto \"Inizio\"", bc));
-                switchButton();
-            } else {
-                ordine_lotto = bc.substring(0,8);
-                numeroOrdine.setText(ordine_lotto);
-                Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
-
-                if (L.getTipo().equals(Lavorazione.SOLO_INIZIO) && L.getCodice().equals("V2")){
-                    getBilancelle(registrazione);
-                    return;
-                }
-
-                if (L.getTipo().equals(Lavorazione.SOLO_FINE)){
-                    registrazione.setSeconds(1); //fine lavoro
-                }
-                registrazione.sendDati(getContext(), serverInfo);
-            }*/
         } else {
             // This is important, otherwise the result will not be passed to the fragment
             serverInfo.setText("Scansione codice ANNULLATA");
@@ -187,8 +221,6 @@ public class Lavorazione_1Fragment extends Fragment {
     private void sendDati(String barcode){
 
         Barcoder barcoder = new Barcoder(barcode);
-
-        Log.d("meo", "sendDati: " + barcode);
 
         if (!barcoder.isValid()) {
             serverInfo.setText(String.format("Codice ERRATO (%s)! Riprova. Per inserimento manuale tieni premuto il tasto \"Inizio\"", barcode));
@@ -216,12 +248,10 @@ public class Lavorazione_1Fragment extends Fragment {
             //Carrello richiesto
             if (L.getNeedCart().equals("1") && registrazione.getSeconds()>0){
                 getCarrello(registrazione, L.getCartCode());
-                return;
+            } else {
+                registrazione.sendDati(getContext(), serverInfo);
             }
-
-            registrazione.sendDati(getContext(), serverInfo);
         }
-
     }
 
     private void switchButton(){
@@ -229,6 +259,33 @@ public class Lavorazione_1Fragment extends Fragment {
             btnInizio.setEnabled(!btnInizio.isEnabled());
             btnFine.setEnabled(!btnFine.isEnabled());
         }
+    }
+
+    private void getMinuti(Registrazione registrazione){
+        final EditText editText = new EditText(getActivity());
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle("Durata intervento in minuti (" + registrazione.getSeconds()/60 +") ?")
+                .setView(editText)
+
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                })
+
+                .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        long minuti = Long.parseLong(editText.getText().toString());
+                        registrazione.setSeconds(minuti*60);
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void getBilancelle(Registrazione registrazione){
@@ -251,7 +308,6 @@ public class Lavorazione_1Fragment extends Fragment {
         dialog.show();
     }
 
-
     private void getCarrello(Registrazione registrazione, String cartCode){
         final EditText editText = new EditText(getActivity());
 //        editText.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -261,6 +317,14 @@ public class Lavorazione_1Fragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle(String.format("%s : numero carrello x%s?", registrazione.getOrdine_lotto(),cartCode))
                 .setView(editText)
+
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        registrazione.setCarrello(String.format("%s", cartCode));
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                })
 
                 .setPositiveButton("Invia", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -276,5 +340,41 @@ public class Lavorazione_1Fragment extends Fragment {
         dialog.show();
     }
 
+    private void askForLinkedLav(Lavorazione lavorazione, Registrazione registrazione){
+
+        for (LinkStep linkstep: lavorazione.getLinkSteps()) {
+            AlertDialog numDialog = new AlertDialog.Builder(getActivity())
+                    .setTitle(linkstep.getDescrizione())
+                    .setMessage(linkstep.getDomanda())
+                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            registrazione.setCodice(linkstep.getCodice());
+                            registrazione.sendDati(getContext(), serverInfo);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    })
+                    .create();
+            numDialog.show();
+        }
+    }
+
+    public void getClienteOrdine (String ordine, String lotto){
+        String getURL = String.format("http://%s/api/cliente/%s/%s",
+                MainActivity.WEBSERVER_IP, ordine, lotto);
+
+        StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
+                response -> {
+                    Toast.makeText(getContext(), response.toString(),Toast.LENGTH_LONG).show();
+                },
+                error -> {
+                    Toast.makeText(getContext(), error.toString(),Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                });
+
+        MySingleton.getInstance(getContext()).addToRequestque(sRequest);
+    }
 
 }

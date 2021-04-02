@@ -17,14 +17,31 @@
         codice="A1"
         tipo="1"
         colore="#f94144"
+        linkedTo="1"
         needCart="1"
         cartCode="TA"
-        />
+        >
+        <linkedTo>
+            <linkedLav
+                descrizione="prima"
+                codice="s1"
+                domanda=""/>
+            <linkedLav
+                descrizione="seconda"
+                codice="s2"
+                domanda=""/>
+            <linkedLav
+                descrizione="terza"
+                codice="s3"
+                domanda=""/>
+        </linkedTo>
+    </lavorazione>
     <lavorazione
         descrizione="Lamiere"
         codice="A2"
         tipo="1"
         colore="#f3722c"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -33,6 +50,7 @@
         codice="C1"
         tipo="1"
         colore="#f8961e"
+        linkedTo=""
         needCart="1"
         cartCode="TA"
         />
@@ -41,6 +59,7 @@
         codice="S1"
         tipo="1"
         colore="#f9c74f"
+        linkedTo=""
         needCart="1"
         cartCode="SA"
         />
@@ -49,6 +68,7 @@
         codice="S2"
         tipo="1"
         colore="#90be6d"
+        linkedTo=""
         needCart="1"
         cartCode="SA"
         />
@@ -57,6 +77,7 @@
         codice="S3"
         tipo="1"
         colore="#43aa8b"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -65,6 +86,7 @@
         codice="S4"
         tipo="1"
         colore="#577590"
+        linkedTo=""
         needCart="1"
         cartCode="SA"
         />
@@ -74,6 +96,7 @@
         codice="S5"
         tipo="1"
         colore="#f94144"
+        linkedTo=""
         needCart="1"
         cartCode="SA"
         />
@@ -82,6 +105,7 @@
         codice="S6"
         tipo="1"
         colore="#f3722c"
+        linkedTo=""
         needCart="1"
         cartCode="SA"
         />
@@ -90,6 +114,7 @@
         codice="V1"
         tipo="I"
         colore="#f8961e"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -98,6 +123,7 @@
         codice="V1"
         tipo="F"
         colore="#f9c74f"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -106,6 +132,7 @@
         codice="V2"
         tipo="I"
         colore="#90be6d"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -114,6 +141,7 @@
         codice="V2"
         tipo="F"
         colore="#43aa8b"
+        linkedTo=""
         needCart="1"
         cartCode="VE"
         />
@@ -122,6 +150,7 @@
         codice="C2"
         tipo="2"
         colore="#577590"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -131,6 +160,7 @@
         codice="G1"
         tipo="1"
         colore="#f94144"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -139,6 +169,7 @@
         codice="I1"
         tipo="1"
         colore="#f3722c"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -147,6 +178,7 @@
         codice="M1"
         tipo="1"
         colore="#f8961e"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -155,6 +187,7 @@
         codice="M2"
         tipo="1"
         colore="#f9c74f"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -163,6 +196,7 @@
         codice="M3"
         tipo="1"
         colore="#90be6d"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -171,6 +205,7 @@
         codice="M4"
         tipo="1"
         colore="#43aa8b"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -179,23 +214,36 @@
         codice="M5"
         tipo="1"
         colore="#577590"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
+    <lavorazione
+        descrizione="Controllo/Etichette"
+        codice="S7"
+        tipo="1"
+        colore="#673AB7"
+        linkedTo="S5"
+        needCart="0"
+        cartCode=""
+        >
+    </lavorazione>
 
     <lavorazione
         descrizione="Intestatura"
         codice="M6"
         tipo="1"
         colore="#f94144"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
     <lavorazione
-        descrizione="Assemblaggio persiane"
+        descrizione="Assembl. persiane"
         codice="A3"
         tipo="1"
         colore="#f3722c"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -204,6 +252,7 @@
         codice="C3"
         tipo="1"
         colore="#f8961e"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -212,6 +261,7 @@
         codice="A0"
         tipo="F"
         colore="#f9c74f"
+        linkedTo=""
         needCart="1"
         cartCode="BA"
         />
@@ -220,6 +270,7 @@
         codice="A4"
         tipo="1"
         colore="#90be6d"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -228,6 +279,7 @@
         codice="C4"
         tipo="1"
         colore="#43aa8b"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -236,6 +288,7 @@
         codice="C5"
         tipo="2"
         colore="#577590"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -244,6 +297,7 @@
         codice="C6"
         tipo="2"
         colore="#673AB7"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -253,14 +307,16 @@
         codice="C7"
         tipo="1"
         colore="#f94144"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
     <lavorazione
         descrizione="CNC fori scarico"
         codice="C8"
-        tipo=""
+        tipo="1"
         colore="#f3722c"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -269,38 +325,43 @@
         codice="I2"
         tipo="2"
         colore="#f8961e"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
     <lavorazione
-        descrizione=""
-        codice=""
-        tipo=""
+        descrizione="Assembl. persiane GREZZE"
+        codice="A5"
+        tipo="1"
         colore="#f9c74f"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
     <lavorazione
-        descrizione=""
-        codice=""
-        tipo=""
+        descrizione="Taglio complementari"
+        codice="A6"
+        tipo="1"
         colore="#90be6d"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
     <lavorazione
-        descrizione=""
-        codice=""
-        tipo=""
+        descrizione="Ordine INcompleto"
+        codice="R1"
+        tipo="I"
         colore="#43aa8b"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
     <lavorazione
-        descrizione=""
-        codice=""
-        tipo=""
+        descrizione="Ordine completo"
+        codice="R2"
+        tipo="F"
         colore="#577590"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />
@@ -309,6 +370,7 @@
         codice="P1"
         tipo="0"
         colore="#673AB7"
+        linkedTo=""
         needCart="0"
         cartCode=""
         />

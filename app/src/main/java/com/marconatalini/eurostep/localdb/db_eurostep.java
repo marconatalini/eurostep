@@ -37,6 +37,7 @@ public class db_eurostep {
     public static final String COLUMN_NAME_SECONDI = "secondi";
     public static final String COLUMN_NAME_BILANCELLE = "bilancelle";
     public static final String COLUMN_NAME_CARRELLO = "carrello";
+    public static final String COLUMN_NAME_MULTIORDINE = "multiordine";
     public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
     }
 
@@ -49,6 +50,7 @@ public class db_eurostep {
                     registro.COLUMN_NAME_SECONDI + INT_TYPE + COMMA_SEP +
                     registro.COLUMN_NAME_BILANCELLE + REAL_TYPE + COMMA_SEP +
                     registro.COLUMN_NAME_CARRELLO + TEXT_TYPE + COMMA_SEP +
+                    registro.COLUMN_NAME_MULTIORDINE + INT_TYPE + COMMA_SEP +
                     registro.COLUMN_NAME_TIMESTAMP + TIMESTAMP_TYPE + " DEFAULT (DATETIME(CURRENT_TIMESTAMP))" +
                     " )";
 
@@ -57,7 +59,7 @@ public class db_eurostep {
 
     public static class EurostepDbHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.
-        public static final int DATABASE_VERSION = 8;
+        public static final int DATABASE_VERSION = 9;
         public static final String DATABASE_NAME = "eurostep.db";
 
         public EurostepDbHelper(Context context) {

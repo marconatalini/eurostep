@@ -63,6 +63,14 @@ public class Barcoder {
 
         if (this.barcode.equals("")) return Boolean.FALSE;
 
+        if (this.barcode.length() == 6) { //Ordine barre 200xxx
+            this.numeroOrdine = Integer.valueOf(this.barcode);
+            if (numeroOrdine > 200000 && numeroOrdine < 500000) {
+                this.lottoOrdine = String.valueOf(0);
+                return Boolean.TRUE;
+            }
+        }
+
         Pattern pOrdine = Pattern.compile("(^[85]\\d{5})[ _]([\\dA-Z])");
         Matcher matchNumero= pOrdine.matcher(this.barcode);
 

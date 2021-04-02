@@ -398,7 +398,7 @@ public class LavorazioniActivity extends Activity {
                     ServerResponse.setText(String.format("%s inviato! OK", ordine_Lotto));
                 },
                 error -> {
-                    cursor.saveRecord(cod_lav, ordine_Lotto, operatore, seconds, bilancelle); //salvo nel DB locale
+                    cursor.saveRecord(cod_lav, ordine_Lotto, operatore, seconds, bilancelle, "", 1); //salvo nel DB locale
                     ServerResponse.setText(String.format("ERRORE: %s salvato in memoria. ", ordine_Lotto));
                     Toast.makeText(LavorazioniActivity.this, error.toString(),Toast.LENGTH_LONG).show();
                     error.printStackTrace();

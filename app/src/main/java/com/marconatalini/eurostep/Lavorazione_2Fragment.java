@@ -186,6 +186,7 @@ public class Lavorazione_2Fragment extends Fragment {
             Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
 
             registrazione.setSeconds(timeDelta); //fine lavoro
+            registrazione.setMultiordine(arrayList.size()); //totale ordini chiusi
             registrazione.sendDati(getContext(), serverInfo);
         }
 

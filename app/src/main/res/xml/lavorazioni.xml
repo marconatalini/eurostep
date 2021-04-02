@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lavorazioni>
+    <!-- Descrizione (codice tipo)
+    tipo 0 = inizio/fine lavorazione senza ordine
+    tipo 1 = inizio/fine
+    tipo 2 = selezione ordini multipli (cianfrinato)
+    tipo 3 = come 1 ma con imputazione minuti manuale (ritocco)
+    tipo I = inizio lavorazione non temporizzata
+    tipo F = fine lavorazione non temporizzata
+    tipo M = scarico dati dalla memoria
+    NeedCart 0=no, 1=si a fine lavorazione -->
+
+    <entry>
+        <descrizione type="text">Taglio Materiale</descrizione>
+        <codice type="text">A1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text">1</linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">TA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Lamiere</descrizione>
+        <codice type="text">A2</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f3722c</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+        <linkStep>
+            <step>
+                <codice>L1</codice>
+                <descrizione>Ordine Lamiere</descrizione>
+                <domanda>E' un ordine con SOLO lamiere DECORATE?</domanda>
+            </step>
+        </linkStep>
+    </entry>
+    <entry>
+        <descrizione type="text">Lavorazioni CNC</descrizione>
+        <codice type="text">C1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f8961e</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">TA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Puntatura</descrizione>
+        <codice type="text">S1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+        <linkStep>
+            <step>
+                <codice>S2</codice>
+                <descrizione>Saldatura</descrizione>
+                <domanda>Ha fatto anche la saldatura?</domanda>
+            </step>
+        </linkStep>
+    </entry>
+    <entry>
+        <descrizione type="text">Saldatura</descrizione>
+        <codice type="text">S2</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#90be6d</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Fresatura</descrizione>
+        <codice type="text">S3</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Levigatura</descrizione>
+        <codice type="text">S4</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#577590</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Zoccoli/Traversi</descrizione>
+        <codice type="text">S5</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Vibratura finale</descrizione>
+        <codice type="text">S6</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f3722c</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Entrata repreparto verniciatura</descrizione>
+        <codice type="text">V1</codice>
+        <tipo type="text">I</tipo>
+        <colore type="text">#f8961e</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Uscita reparto verniciatura</descrizione>
+        <codice type="text">V1</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">VE</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Entrata forno</descrizione>
+        <codice type="text">V2</codice>
+        <tipo type="text">I</tipo>
+        <colore type="text">#90be6d</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Uscita forno</descrizione>
+        <codice type="text">V2</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">VE</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Cianfrinatura</descrizione>
+        <codice type="text">C2</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#577590</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Montaggio guarnizioni</descrizione>
+        <codice type="text">G1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+        <linkStep>
+            <step>
+                <codice>R1</codice>
+                <descrizione>Ordine Incompleto</descrizione>
+                <domanda>Manca materiale?</domanda>
+            </step>
+            <step>
+                <codice>R2</codice>
+                <descrizione>Ordine completato</descrizione>
+                <domanda>Possiamo spedire?</domanda>
+            </step>
+        </linkStep>
+    </entry>
+    <entry>
+        <descrizione type="text">Saldatura GT</descrizione>
+        <codice type="text">G2</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f8961e</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Imballaggio</descrizione>
+        <codice type="text">I1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f3722c</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Archi</descrizione>
+        <codice type="text">M1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f8961e</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Fuori squadro</descrizione>
+        <codice type="text">M2</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Strutture pannelli</descrizione>
+        <codice type="text">M3</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#90be6d</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Bugne</descrizione>
+        <codice type="text">M4</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Rifilatura</descrizione>
+        <codice type="text">M5</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#577590</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Controllo/Etichette</descrizione>
+        <codice type="text">S7</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#673AB7</colore>
+        <linkedTo type="text">S5</linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+        <linkStep>
+            <step>
+                <codice>S5</codice>
+                <descrizione>Zoccoli/traversi</descrizione>
+                <domanda>Hai unito anche gli zoccoli?</domanda>
+            </step>
+            <step>
+                <codice>M6</codice>
+                <descrizione>Intestatura</descrizione>
+                <domanda>Hai fatto anche le intestature?</domanda>
+            </step>
+            <step>
+                <codice>R1</codice>
+                <descrizione>Ordine Incompleto</descrizione>
+                <domanda>Manca materiale?</domanda>
+            </step>
+        </linkStep>
+    </entry>
+    <entry>
+        <descrizione type="text">Intestatura</descrizione>
+        <codice type="text">M6</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Assembl. persiane</descrizione>
+        <codice type="text">A3</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f3722c</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">CNC persiane QUADRA</descrizione>
+        <codice type="text">C3</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f8961e</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">QUADRA ante</descrizione>
+        <codice type="text">Q1</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#673AB7</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Smistamento</descrizione>
+        <codice type="text">A0</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">BA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Accessori/Recupero barre</descrizione>
+        <codice type="text">A4</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#90be6d</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Monoblocco</descrizione>
+        <codice type="text">C4</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">CNC sprint DECOR</descrizione>
+        <codice type="text">C5</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#577590</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">TA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">CNC sprint grezzo</descrizione>
+        <codice type="text">C6</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#673AB7</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">TA</cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">CNC fori Yale e vari</descrizione>
+        <codice type="text">C7</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">CNC Imago</descrizione>
+        <codice type="text">C8</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#f3722c</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Corrieri espressi</descrizione>
+        <codice type="text">I2</codice>
+        <tipo type="text">2</tipo>
+        <colore type="text">#f8961e</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">PREassembl. persiane GREZZE</descrizione>
+        <codice type="text">A5</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Taglio complementari</descrizione>
+        <codice type="text">A6</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#90be6d</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Ordine INcompleto</descrizione>
+        <codice type="text">R1</codice>
+        <tipo type="text">I</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Ordine completo</descrizione>
+        <codice type="text">R2</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#577590</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Ritocco</descrizione>
+        <codice type="text">V3</codice>
+        <tipo type="text">3</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Pulizia reparto</descrizione>
+        <codice type="text">P1</codice>
+        <tipo type="text">0</tipo>
+        <colore type="text">#673AB7</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+</lavorazioni>
