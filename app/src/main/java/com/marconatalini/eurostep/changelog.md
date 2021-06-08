@@ -55,3 +55,8 @@
 
 02.04.21    1 ora
     - segnalazione ordine completo dopo montaggio guarnizione
+
+------------PAGATO--------------
+
+06.05.21    1 ora
+    - nuova lavorazione vibratura pannelli S8

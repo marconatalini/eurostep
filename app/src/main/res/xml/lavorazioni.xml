@@ -97,6 +97,15 @@
         <cartCode type="text">SA</cartCode>
     </entry>
     <entry>
+        <descrizione type="text">Vibratura pannelli</descrizione>
+        <codice type="text">S8</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#90be6d</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">SA</cartCode>
+    </entry>
+    <entry>
         <descrizione type="text">Vibratura finale</descrizione>
         <codice type="text">S6</codice>
         <tipo type="text">1</tipo>
