@@ -308,11 +308,19 @@
     <entry>
         <descrizione type="text">Smistamento</descrizione>
         <codice type="text">A0</codice>
-        <tipo type="text">F</tipo>
+        <tipo type="text">1</tipo>
         <colore type="text">#f9c74f</colore>
         <linkedTo type="text"></linkedTo>
-        <needCart type="text">1</needCart>
-        <cartCode type="text">BA</cartCode>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+<!--        cartcode BA-->
+        <linkStep>
+            <step>
+                <codice>R1</codice>
+                <descrizione>Ordine Incompleto</descrizione>
+                <domanda>Manca materiale?</domanda>
+            </step>
+        </linkStep>
     </entry>
     <entry>
         <descrizione type="text">Accessori/Recupero barre</descrizione>
@@ -382,6 +390,24 @@
         <codice type="text">A5</codice>
         <tipo type="text">1</tipo>
         <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Acc. Persiane in CORSO</descrizione>
+        <codice type="text">A7</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#f94144</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Acc. Persiane completi</descrizione>
+        <codice type="text">A8</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#43aa8b</colore>
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>
         <cartCode type="text"></cartCode>
