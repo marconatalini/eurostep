@@ -306,6 +306,15 @@
         <cartCode type="text"></cartCode>
     </entry>
     <entry>
+        <descrizione type="text">QUADRA telai</descrizione>
+        <codice type="text">Q2</codice>
+        <tipo type="text">1</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
         <descrizione type="text">Smistamento</descrizione>
         <codice type="text">A0</codice>
         <tipo type="text">1</tipo>
