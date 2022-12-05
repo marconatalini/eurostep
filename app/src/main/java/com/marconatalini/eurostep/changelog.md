@@ -60,3 +60,5 @@
 
 06.05.21    1 ora
     - nuova lavorazione vibratura pannelli S8
+
+------------PAGATO--------------
