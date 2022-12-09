@@ -42,6 +42,7 @@ public class Lavorazione_1Fragment extends Fragment {
     private Button btnInizio, btnFine;
     private String carrello;
     private Boolean registrazioneInviata = false;
+    private Boolean ordine_incompleto = false;
 
     private IntentIntegrator integrator;
 
@@ -189,6 +190,12 @@ public class Lavorazione_1Fragment extends Fragment {
                     }
                 }
 
+                //Has checkComplete
+                /*if (L.getCheckComplete().equals("1")) {
+                    getPezziMancanti(registrazione);
+                    registrata = true;
+                }*/
+
                 if (!registrata) {
                     registrazione.sendDati(getContext(), serverInfo);
                 }
@@ -308,6 +315,30 @@ public class Lavorazione_1Fragment extends Fragment {
         dialog.show();
     }
 
+    private void getPezziMancanti(Registrazione registrazione){
+        final EditText editText = new EditText(getActivity());
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle("Manca qualcosa?")
+                .setView(editText)
+
+                .setPositiveButton("Invia segnalazione", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String pezziMancanti = editText.getText().toString();
+                        registrazione.setPezziMancanti(pezziMancanti); //inviati al server come note
+                        registrazione.setCodice("R1");
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void getCarrello(Registrazione registrazione, String cartCode){
         final EditText editText = new EditText(getActivity());
 //        editText.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -342,22 +373,39 @@ public class Lavorazione_1Fragment extends Fragment {
 
     private void askForLinkedLav(Lavorazione lavorazione, Registrazione registrazione){
 
+        final EditText editText = new EditText(getActivity());
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
         for (LinkStep linkstep: lavorazione.getLinkSteps()) {
-            AlertDialog numDialog = new AlertDialog.Builder(getActivity())
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle(linkstep.getDescrizione())
                     .setMessage(linkstep.getDomanda())
-                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            registrazione.setCodice(linkstep.getCodice());
-                            registrazione.sendDati(getContext(), serverInfo);
-                        }
-                    })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         }
-                    })
-                    .create();
-            numDialog.show();
+                    });
+            if (linkstep.getCodice().equals("R1")) {
+                builder.setView(editText);
+                builder.setPositiveButton("Invia", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String pezziMancanti = editText.getText().toString();
+                        registrazione.setPezziMancanti(pezziMancanti); //inviati al server come note
+                        registrazione.setCodice(linkstep.getCodice());
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                });
+            } else {
+                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        registrazione.setPezziMancanti(""); //inviati al server come note
+                        registrazione.setCodice(linkstep.getCodice());
+                        registrazione.sendDati(getContext(), serverInfo);
+                    }
+                });
+            }
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

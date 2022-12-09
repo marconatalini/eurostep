@@ -26,7 +26,7 @@ public class Lavorazione implements Parcelable {
     public static final String SOLO_FINE = "F";
 
 
-    public Lavorazione(String descrizione, String codice, String tipo, String colore, String linkedTo, String needCart, String cartCode) {
+    public Lavorazione(String descrizione, String codice, String tipo, String colore, String linkedTo, String needCart, String cartCode, String checkComplete) {
         this.descrizione = descrizione;
         this.codice = codice;
         this.tipo = tipo;

@@ -63,6 +63,7 @@ public class LavorazioniParser {
         String linkedTo = null;
         String needCart = null;
         String cartCode = null;
+        String checkComplete = null;
         List<LinkStep> linkSteps = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -84,6 +85,8 @@ public class LavorazioniParser {
                 needCart = readInfo(parser, "needCart");
             } else if (name.equals("cartCode")) {
                 cartCode = readInfo(parser, "cartCode");
+            } else if (name.equals("checkComplete")) {
+                checkComplete = readInfo(parser, "checkComplete");
             } else if (name.equals("linkStep")) {
                 linkSteps = readLinkStep(parser);
             } else {
@@ -91,7 +94,7 @@ public class LavorazioniParser {
             }
         }
 
-        Lavorazione L = new Lavorazione(descrizione, codice, tipo, colore, linkedTo, needCart, cartCode);
+        Lavorazione L = new Lavorazione(descrizione, codice, tipo, colore, linkedTo, needCart, cartCode, checkComplete);
         if (linkSteps != null) {
             for (LinkStep step: linkSteps) {
                 L.addLinkstep(step);

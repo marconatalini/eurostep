@@ -175,12 +175,11 @@
         <colore type="text">#f94144</colore>
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>
-        <cartCode type="text"></cartCode>
-        <linkStep>
+        <cartCode type="text"></cartCode>        <linkStep>
             <step>
                 <codice>R1</codice>
                 <descrizione>Ordine Incompleto</descrizione>
-                <domanda>Manca materiale?</domanda>
+                <domanda>Manca materiale? Scrivi cosa e invia</domanda>
             </step>
             <step>
                 <codice>R2</codice>
@@ -196,8 +195,7 @@
         <colore type="text">#f8961e</colore>
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>
-        <cartCode type="text"></cartCode>
-    </entry>
+        <cartCode type="text"></cartCode>    </entry>
     <entry>
         <descrizione type="text">Imballaggio</descrizione>
         <codice type="text">I1</codice>
@@ -274,7 +272,7 @@
             <step>
                 <codice>R1</codice>
                 <descrizione>Ordine Incompleto</descrizione>
-                <domanda>Manca materiale?</domanda>
+                <domanda>Manca materiale? Scrivi cosa e invia</domanda>
             </step>
         </linkStep>
     </entry>
@@ -331,12 +329,12 @@
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>
         <cartCode type="text"></cartCode>
-<!--        cartcode BA-->
+        <!--        cartcode BA-->
         <linkStep>
             <step>
                 <codice>R1</codice>
                 <descrizione>Ordine Incompleto</descrizione>
-                <domanda>Manca materiale?</domanda>
+                <domanda>Manca materiale? Scrivi cosa e invia</domanda>
             </step>
         </linkStep>
     </entry>
@@ -442,7 +440,7 @@
     <entry>
         <descrizione type="text">Ordine INcompleto</descrizione>
         <codice type="text">R1</codice>
-        <tipo type="text">I</tipo>
+        <tipo type="text">F</tipo>
         <colore type="text">#43aa8b</colore>
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>

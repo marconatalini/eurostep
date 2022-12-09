@@ -91,8 +91,9 @@ public class Lavorazione_MenuFragment extends Fragment {
                     String linkedTo = parser.getAttributeValue(null,"linkedTo");
                     String needCart = parser.getAttributeValue(null,"needCart");
                     String cartCode = parser.getAttributeValue(null,"cartCode");
+                    String checkComplete = parser.getAttributeValue(null,"checkComplete");
 
-                    Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore, linkedTo, needCart, cartCode );
+                    Lavorazione Lav = new Lavorazione(descrizione, codice, tipo, colore, linkedTo, needCart, cartCode, checkComplete );
                     addButton(Lav, lastUsedLavCode);
 
                 }

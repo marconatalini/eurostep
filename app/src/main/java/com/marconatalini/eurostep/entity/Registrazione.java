@@ -15,6 +15,10 @@ import com.marconatalini.eurostep.MainActivity;
 import com.marconatalini.eurostep.MySingleton;
 import com.marconatalini.eurostep.localdb.dbCursor;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 public class Registrazione implements Cloneable{
 
     private Context context;
@@ -22,6 +26,8 @@ public class Registrazione implements Cloneable{
     private String ordine_lotto;
     private String operatore;
     private String carrello = "";
+    private String pezziMancanti = "";
+    private String note = "";
     private long seconds = 0;
     private float bilancelle = 0.0f;
     private boolean erroreInvioDati = false;
@@ -59,6 +65,10 @@ public class Registrazione implements Cloneable{
         this.carrello = carrello;
     }
 
+    public void setPezziMancanti(String pezziMancanti) {
+        this.pezziMancanti = pezziMancanti; //note
+    }
+
     public long getSeconds() {
         return seconds;
     }
@@ -78,9 +88,17 @@ public class Registrazione implements Cloneable{
             throw new ClassCastException(context.toString() + " must implement OnRecordSavedListener");
         }
 
-        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&carrello=%s&multiordine=%s",
-                        MainActivity.WEBSERVER_IP, operatore, codice, ordine_lotto, seconds, bilancelle, carrello, multiordine);
+        try {
+            note = URLEncoder.encode(pezziMancanti, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            note = "Errore descrizione";
+            e.printStackTrace();
+        }
+
+        String getURL = String.format("http://%s/online/%s/%s?&ordine_lotto=%s&seconds=%d&bilancelle=%s&carrello=%s&multiordine=%s&note=%s",
+                        MainActivity.WEBSERVER_IP, operatore, codice, ordine_lotto, seconds, bilancelle, carrello, multiordine, note);
         Log.d("meo", "sendDati: " + getURL);
+
         ServerResponse.setText(String.format("Invio dati %s in corso...", ordine_lotto));
         StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
                 response -> {
