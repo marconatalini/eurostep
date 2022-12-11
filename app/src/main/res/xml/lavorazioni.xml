@@ -7,6 +7,7 @@
     tipo 3 = come 1 ma con imputazione minuti manuale (ritocco)
     tipo I = inizio lavorazione non temporizzata
     tipo F = fine lavorazione non temporizzata
+    tipo N = fine lavorazione non temporizzata con note
     tipo M = scarico dati dalla memoria
     NeedCart 0=no, 1=si a fine lavorazione -->
 
@@ -440,7 +441,7 @@
     <entry>
         <descrizione type="text">Ordine INcompleto</descrizione>
         <codice type="text">R1</codice>
-        <tipo type="text">F</tipo>
+        <tipo type="text">N</tipo>
         <colore type="text">#43aa8b</colore>
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>

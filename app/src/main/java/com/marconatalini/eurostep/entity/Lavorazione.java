@@ -24,6 +24,7 @@ public class Lavorazione implements Parcelable {
     public static final String TEMPORIZZATA_MANUALE = "3";
     public static final String SOLO_INIZIO = "I";
     public static final String SOLO_FINE = "F";
+    public static final String SOLO_FINE_NOTE = "N";
 
 
     public Lavorazione(String descrizione, String codice, String tipo, String colore, String linkedTo, String needCart, String cartCode, String checkComplete) {

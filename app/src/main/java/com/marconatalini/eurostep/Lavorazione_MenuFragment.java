@@ -177,6 +177,21 @@ public class Lavorazione_MenuFragment extends Fragment {
                     }
                 });
                 break;
+            case Lavorazione.SOLO_FINE_NOTE: //lavoro non temporizzato > FINE > con note
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setTitleMainActivity(Lav.getDescrizione());
+                        editor.putString(getString(R.string.last_select_lavorazione_code), Lav.getCodice());
+                        editor.apply();
+                        Lavorazione_MenuFragmentDirections.ActionMenuFragmentToLavorazione3Fragment action =
+                                Lavorazione_MenuFragmentDirections.actionMenuFragmentToLavorazione3Fragment(Lav);
+
+                        NavHostFragment.findNavController(Lavorazione_MenuFragment.this)
+                                .navigate(action);
+                    }
+                });
+                break;
         }
         flexboxLayout.addView(btn);
     }
