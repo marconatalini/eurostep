@@ -4,10 +4,12 @@ package com.marconatalini.eurostep;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -33,16 +36,29 @@ import com.marconatalini.eurostep.tool.Barcoder;
 
 import static android.os.SystemClock.elapsedRealtime;
 
+import static java.util.Collections.list;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 public class Lavorazione_1Fragment extends Fragment {
 
     private Lavorazione L;
     private long timerON;
-    private TextView serverInfo, numeroOrdine;
+    private TextView serverInfo, numeroOrdine, noteOrdine;
     private String ordine_lotto;
     private Button btnInizio, btnFine;
-    private String carrello;
-    private Boolean registrazioneInviata = false;
-    private Boolean ordine_incompleto = false;
+//    private String carrello;
+//    private Boolean registrazioneInviata = false;
+//    private Boolean ordine_incompleto = false;
 
     private IntentIntegrator integrator;
 
@@ -61,6 +77,7 @@ public class Lavorazione_1Fragment extends Fragment {
         btnInizio = view.findViewById(R.id.btn_inizio);
         btnFine = view.findViewById(R.id.btn_fine);
         serverInfo = view.findViewById(R.id.server_info);
+        noteOrdine = view.findViewById(R.id.note_ordine);
         numeroOrdine = view.findViewById(R.id.numero_ordine);
         numeroOrdine.setText("Premi inizio.");
 
@@ -117,6 +134,7 @@ public class Lavorazione_1Fragment extends Fragment {
                     Barcoder bc = new Barcoder(ordine_lotto);
                     if (bc.checkBarcodeOrdine()) {
                         getClienteOrdine(bc.getNumeroOrdine().toString(), bc.getLottoOrdine().toString());
+//                        get_note_avanzamento_ordine(bc.getNumeroOrdine().toString(), bc.getLottoOrdine().toString());
                     }
                 }
 
@@ -164,6 +182,7 @@ public class Lavorazione_1Fragment extends Fragment {
                 boolean registrata = false;
                 switchButton();
                 numeroOrdine.setText("Premi inizio.");
+                noteOrdine.setText("");
                 Registrazione registrazione = new Registrazione(L.getCodice(), ordine_lotto, MainActivity.OPERATORE);
                 registrazione.setSeconds(timeDelta);
 
@@ -258,6 +277,8 @@ public class Lavorazione_1Fragment extends Fragment {
             } else {
                 registrazione.sendDati(getContext(), serverInfo);
             }
+
+            get_note_avanzamento_ordine(barcoder.getNumeroOrdine().toString(), barcoder.getLottoOrdine());
         }
     }
 
@@ -423,6 +444,66 @@ public class Lavorazione_1Fragment extends Fragment {
                 });
 
         MySingleton.getInstance(getContext()).addToRequestque(sRequest);
+    }
+
+    public void get_note_avanzamento_ordine (String ordine, String lotto){
+        String getURL = String.format("http://%s/api/note/%s/%s",
+                MainActivity.WEBSERVER_IP, ordine, lotto);
+
+        StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
+                response -> {
+                    noteOrdine.setText(json_to_note(response));
+                },
+                error -> {
+                    Toast.makeText(getContext(), error.toString(),Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                });
+
+        MySingleton.getInstance(getContext()).addToRequestque(sRequest);
+    }
+
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String json_to_note(String response) {
+        StringBuilder note = new StringBuilder();
+
+        try {
+            JSONArray arr = new JSONArray(response);
+            
+            for (int i = 0; i < arr.length(); i++)
+            {
+                // [{"numeroOrdine":886564,"lottoOrdine":"0","note":"pos1 telaio","descrizione":"MARCO NATALINI",
+                // "timestamp":{"date":"2022-12-08 11:04:04.000000","timezone_type":3,"timezone":"UTC"}}]
+                String data = arr.getJSONObject(i).getJSONObject("timestamp").getString("date");
+                String mese = data.substring(5,7);
+                String giorno = data.substring(8,10);
+                String ora = data.substring(11,13);
+                String minuto = data.substring(14,16);
+
+//                LocalDateTime date = LocalDateTime.parse(data, DateTimeFormatter.ofPattern("y-M-d H:m:s.n"));
+//                note.append(date.format(DateTimeFormatter.ofPattern("dd/MM H:mm")));
+                note.append(giorno).append("/").append(mese).append(" ore ").append(ora).append(":").append(minuto);
+                note.append(" "); //operatore
+                note.append(nikname(arr.getJSONObject(i).getString("descrizione"))); //operatore
+                note.append("\n"); //operatore
+                note.append(arr.getJSONObject(i).getString("note"));
+                note.append("\n"); //operatore
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return note.toString();
+    }
+
+    private String nikname(String name)
+    {
+        String[] dati = name.split("\\s+");
+        if (dati.length >= 2) {
+            return dati[0] + " " + dati[1].charAt(0) + ".";
+        }
+
+        return dati[0];
     }
 
 }

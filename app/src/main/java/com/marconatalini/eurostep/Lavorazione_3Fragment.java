@@ -112,7 +112,7 @@ public class Lavorazione_3Fragment extends Fragment {
             layout.setBackgroundColor(Color.parseColor(L.getColore()));
         }
 
-        TextWatcher numeroWatcher = new TextWatcher() {
+        /*TextWatcher numeroWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -135,7 +135,7 @@ public class Lavorazione_3Fragment extends Fragment {
                 }
 
             }
-        };
+        };*/
 
         TextWatcher noteWatcher = new TextWatcher() {
             @Override
@@ -183,6 +183,7 @@ public class Lavorazione_3Fragment extends Fragment {
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                serverInfo.setText("");
                             }
                         })
                         .create();
@@ -207,9 +208,6 @@ public class Lavorazione_3Fragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if (btnFine.isEnabled()){
-            btnFine.performClick();
-        }
         super.onDestroy();
     }
 

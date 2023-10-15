@@ -26,6 +26,7 @@ public class MainLavorazioniActivity extends AppCompatActivity  implements Regis
     private FloatingActionButton fab;
     dbCursor cursor;
     long savedRecord;
+    boolean batch_error = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,9 @@ public class MainLavorazioniActivity extends AppCompatActivity  implements Regis
     private void sendDatiBatch () {
         ArrayMap record = null;
 
-        if (savedRecord >= 0) {
+        if (savedRecord >= 0 && !batch_error) {
+            record = cursor.getLastRecord();
+        } else {
             record = cursor.getFirstRecord();
         }
 
@@ -68,7 +71,7 @@ public class MainLavorazioniActivity extends AppCompatActivity  implements Regis
                 MainActivity.WEBSERVER_IP, record.get("operatore"), record.get("cod_lav"), record.get("ordine_lotto"),
                 record.get("seconds"), record.get("bilancelle"), record.get("carrello"), timestamp);
 
-        snackMsg("Invio dati memoria ... attendi");
+        snackMsg(String.format("Invio dati memoria %d ... attendi", id));
         Log.d("meo", getURL);
         StringRequest sRequest = new StringRequest(Request.Method.GET, getURL,
                 response -> {
@@ -78,6 +81,7 @@ public class MainLavorazioniActivity extends AppCompatActivity  implements Regis
                 },
                 error -> {
                     snackMsg(error.toString().substring(0,30) + "... Riprova più tardi");
+                    batch_error = !batch_error;
                     error.printStackTrace();
                 });
 

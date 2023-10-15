@@ -73,6 +73,27 @@ public class dbCursor {
         return record;
     }
 
+    public ArrayMap getLastRecord()
+    {
+        Cursor c = db.rawQuery("SELECT * FROM registro ORDER BY _id DESC", null);
+
+        ArrayMap record = new ArrayMap<>();
+
+        if (c.moveToFirst()) {
+            record.put("id", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_REGISTRAZIONE_ID)));
+            record.put("cod_lav", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_LAVORAZIONE)));
+            record.put("ordine_lotto", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_ORDINE_LOTTO)));
+            record.put("operatore", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_OPERATORE)));
+            record.put("seconds", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_SECONDI)));
+            record.put("bilancelle", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_BILANCELLE)));
+            record.put("carrello", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_CARRELLO)));
+            record.put("multiordine", c.getLong(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_MULTIORDINE)));
+            record.put("timestamp", c.getString(c.getColumnIndexOrThrow(db_eurostep.registro.COLUMN_NAME_TIMESTAMP)));
+        }
+
+        return record;
+    }
+
     public void deleteRecord(long id)
     {
         db.execSQL(String.format("DELETE FROM registro WHERE _id =%d", id));

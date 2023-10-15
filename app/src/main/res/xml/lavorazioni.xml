@@ -116,6 +116,22 @@
         <cartCode type="text">SA</cartCode>
     </entry>
     <entry>
+        <descrizione type="text">Accorpamento</descrizione>
+        <codice type="text">T1</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+        <!--<linkStep> ## SOLO CON TIPO == 1
+            <step>
+                <codice>R1</codice>
+                <descrizione>Ordine Incompleto</descrizione>
+                <domanda>Manca materiale? Scrivi cosa e invia</domanda>
+            </step>
+        </linkStep>-->
+    </entry>
+    <entry>
         <descrizione type="text">Robot saldatura</descrizione>
         <codice type="text">SR</codice>
         <tipo type="text">1</tipo>
@@ -134,12 +150,21 @@
         <cartCode type="text"></cartCode>
     </entry>
     <entry>
+        <descrizione type="text">Verniciatura Riempimenti</descrizione>
+        <codice type="text">V5</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#43aa8b</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
         <descrizione type="text">Uscita reparto verniciatura</descrizione>
         <codice type="text">V1</codice>
         <tipo type="text">F</tipo>
         <colore type="text">#f9c74f</colore>
         <linkedTo type="text"></linkedTo>
-        <needCart type="text">1</needCart>
+        <needCart type="text">0</needCart>
         <cartCode type="text">VE</cartCode>
     </entry>
     <entry>
@@ -157,7 +182,7 @@
         <tipo type="text">F</tipo>
         <colore type="text">#43aa8b</colore>
         <linkedTo type="text"></linkedTo>
-        <needCart type="text">1</needCart>
+        <needCart type="text">0</needCart>
         <cartCode type="text">VE</cartCode>
     </entry>
     <entry>
@@ -165,6 +190,15 @@
         <codice type="text">C2</codice>
         <tipo type="text">2</tipo>
         <colore type="text">#577590</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Inserti applicati</descrizione>
+        <codice type="text">I3</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#43aa8b</colore>
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>
         <cartCode type="text"></cartCode>
@@ -448,6 +482,15 @@
         <cartCode type="text"></cartCode>
     </entry>
     <entry>
+        <descrizione type="text">Verniciatura parziale</descrizione>
+        <codice type="text">V4</codice>
+        <tipo type="text">N</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">0</needCart>
+        <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
         <descrizione type="text">Ordine completo</descrizione>
         <codice type="text">R2</codice>
         <tipo type="text">F</tipo>
@@ -464,6 +507,15 @@
         <linkedTo type="text"></linkedTo>
         <needCart type="text">0</needCart>
         <cartCode type="text"></cartCode>
+    </entry>
+    <entry>
+        <descrizione type="text">Ospitaletto</descrizione>
+        <codice type="text">O1</codice>
+        <tipo type="text">F</tipo>
+        <colore type="text">#f9c74f</colore>
+        <linkedTo type="text"></linkedTo>
+        <needCart type="text">1</needCart>
+        <cartCode type="text">UB</cartCode>
     </entry>
     <entry>
         <descrizione type="text">Pulizia reparto</descrizione>
