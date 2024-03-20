@@ -74,6 +74,11 @@ public class NCI_verniciatura extends Activity {
 //    Boolean DatiOK = false;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nci_verniciatura);
@@ -563,3 +568,4 @@ public class NCI_verniciatura extends Activity {
         btn_eurostock.setEnabled(flag);
     }
 }
+

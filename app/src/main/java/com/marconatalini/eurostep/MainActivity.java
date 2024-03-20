@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "meo";
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void reload_settings() {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 //        SERVER_IP = sharedPref.getString(SettingsActivity.SERVER_IP, "192.168.1.104");
@@ -70,6 +68,12 @@ public class MainActivity extends AppCompatActivity{
 //        SERVER_PORT = Integer.parseInt(sharedPref.getString(SettingsActivity.SERVER_PORT, "8888"));
         OPERATORE = sharedPref.getString(SettingsActivity.OPERATORE, "");
         //USEVOLLEY = sharedPref.getBoolean(SettingsActivity.USEVOLLEY, false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.reload_settings();
 
         /*if (!OPERATORE.equals("")) {
             unhide_btn(buttonlist);

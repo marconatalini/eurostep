@@ -483,7 +483,7 @@
     </entry>
     <entry>
         <descrizione type="text">Verniciatura parziale</descrizione>
-        <codice type="text">V4</codice>
+        <codice type="text">V6</codice>
         <tipo type="text">N</tipo>
         <colore type="text">#f9c74f</colore>
         <linkedTo type="text"></linkedTo>

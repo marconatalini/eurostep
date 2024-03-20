@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -57,11 +58,23 @@ public class NCI_ordini extends Activity {
     RadioButton chiusa;
     Spinner spinner_erroreIN;
 
-
+    String WEBSERVER_IP = MainActivity.WEBSERVER_IP;
+    String FOTO_UPLOAD_URI = MainActivity.FOTO_UPLOAD_URI;
+    String OPERATORE = MainActivity.OPERATORE;
+    String NOME_OPERATORE = MainActivity.NOME_OPERATORE;
     final static int GET_NUMERO_ORDINE = 1;
 //    private String UPLOAD_URL = "http://" + MainActivity.WEBSERVER_IP + "/registraNCO.php";
 
 //    Boolean DatiOK = false;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("meo", String.format("Resume NCordini: Operatore = %s",MainActivity.OPERATORE));
+        Log.d("meo", String.format("Resume NCordini: Operatore = %s", OPERATORE));
+        Log.d("meo", String.format("Resume NCordini: Operatore = %s", WEBSERVER_IP));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,7 +261,8 @@ public class NCI_ordini extends Activity {
     private void sendNCIO() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(this, "Invio dati", "Attendi...", false, false);
-        String UPLOAD_URL = String.format("http://%s/nc/ordine", MainActivity.WEBSERVER_IP);
+        String UPLOAD_URL = String.format("http://%s/nc/ordine", WEBSERVER_IP);
+        Log.d("meo", String.format("sendNCIO: %s", UPLOAD_URL));
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 response -> {
                     //Disimissing the progress dialog
@@ -269,7 +283,7 @@ public class NCI_ordini extends Activity {
                 //Getting Image Name
                 String mnumero_ordine = numero_lotto.getText().toString().substring(0, 6);
                 String mlotto_ordine = numero_lotto.getText().toString().substring(7, 8);
-                String mcod_operatore = MainActivity.OPERATORE;
+                String mcod_operatore = OPERATORE;
                 String merrorein = spinner_erroreIN.getSelectedItem().toString();
                 String mprelievo_profili_errati = String.valueOf(prelievo_profili_errati.isChecked());
                 String mprelievo_mancanza_barre = String.valueOf(prelievo_mancanza_barre.isChecked());
@@ -371,7 +385,7 @@ public class NCI_ordini extends Activity {
 
         String note = String.valueOf(nciv_note.getText());
         String solution = String.valueOf(soluzione.getText());
-        String operatore = MainActivity.OPERATORE;
+        String operatore = OPERATORE;
 
         Intent intent = new Eurostock(ordine, lotto, operatore, note, solution).IntentOpenWebPage();
 

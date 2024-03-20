@@ -71,7 +71,7 @@ public class Barcoder {
             }
         }
 
-        Pattern pOrdine = Pattern.compile("(^[85]\\d{5})[ _]([\\dA-Z])");
+        Pattern pOrdine = Pattern.compile("(^[985]\\d{5})[ _]([\\dA-Z])");
         Matcher matchNumero= pOrdine.matcher(this.barcode);
 
         if (!matchNumero.find()){
@@ -86,7 +86,7 @@ public class Barcoder {
     public Boolean isOrdineTelai (){ //No underscore
         if (this.barcode == null) return Boolean.FALSE;
 
-        Pattern pOrdine = Pattern.compile("^8\\d{5}[ _][\\dA-Z]$");
+        Pattern pOrdine = Pattern.compile("^[89]\\d{5}[ _][\\dA-Z]$");
         Matcher matchNumero= pOrdine.matcher(this.barcode);
 
         if (!matchNumero.find()){

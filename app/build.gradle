@@ -7,8 +7,8 @@ android {
         applicationId "com.marconatalini.eurostep"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 8
-        versionName "leMaiFinia"
+        versionCode 9
+        versionName 'DagheGAS'
     }
     buildTypes {
         release {
